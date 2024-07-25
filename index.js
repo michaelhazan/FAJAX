@@ -8,10 +8,27 @@
  */
 class Message {
 	/**@type {RESTAPI} */ type;
-	/**@type {string} */ address;
-	/**@type {string} */ sender;
-	/**@type {JSON}*/ body;
+	/**@type {boolean} */ processed;
+	/**@type {string} */ server;
+	/**@type {FXMLHttpRequest} */ client;
+	/**@type {string}*/ body;
+	/**
+	 *
+	 * @param {RESTAPI} type
+	 * @param {} server
+	 * @param {*} sender
+	 */
+	constructor(type, server, client, processed = false) {
+		this.type = type;
+		this.processed = processed;
+		this.server = server;
+		this.client = client;
+		this.body = '';
+	}
 }
+/**
+ * @argument username
+ */
 class User {
 	/**@type {string} */ username;
 	/**@type {string} */ password;
@@ -87,14 +104,19 @@ class Server {
 	functions;
 	constructor() {
 		this.messages = [];
-		setInterval(this.processMessages, 3000);
+
+		setInterval(this.processMessages.bind(this), 3000);
 	}
 	addMessage(message) {
 		this.messages.push(message);
 	}
 	processMessages() {
 		this.messages.forEach((message) => {
-			this.processMessage(message);
+			try {
+				this.processMessage(message);
+			} catch (err) {
+				console.error(err);
+			}
 		});
 		this.messages = [];
 	}
@@ -104,12 +126,22 @@ class Server {
 	 */
 	processMessage(message) {
 		var messageType = message.type.toUpperCase();
-		if (this.functions[messageType]) this.functions[messageType](message);
-		// else return bad type message
+		if (this.functions[messageType]) {
+			message.processed = true;
+			this.functions[messageType](message);
+		} else throw 'Not a valid REST API code.';
+	}
+	/**
+	 *
+	 * @param {Message} message
+	 */
+	sendMessage(message) {
+		network.send(message);
 	}
 }
 class ItemsServer extends Server {
 	constructor() {
+		super();
 		this.functions = {
 			'GET': this.#get,
 			'PUT': this.#put,
@@ -122,8 +154,10 @@ class ItemsServer extends Server {
 	#post() {}
 	#delete() {}
 }
+const itemsServer = new ItemsServer();
 class UsersServer extends Server {
 	constructor() {
+		super();
 		this.functions = {
 			'GET': this.#get,
 			'PUT': this.#put,
@@ -131,18 +165,67 @@ class UsersServer extends Server {
 			'DELETE': this.#delete,
 		};
 	}
-	#get() {}
+	#get(message) {
+		network.send(message);
+	}
 	#put() {}
 	#post() {}
 	#delete() {}
 }
+const usersServer = new UsersServer();
+/**
+ * @type {Object.<string,Server>}
+ */
+const servers = { 'users': usersServer, 'items': itemsServer };
 
-// class Network {
-// 	ItemsServer;
-// 	UsersServer;
-// 	constructor() {
-// 		this.ItemsServer = new ItemsServer
-// 	}
-// }
+class Network {
+	constructor() {
+		this.ItemsServer = new ItemsServer();
+	}
+	/**
+	 * Sends message to specified address
+	 * @param {Message} message
+	 */
+	send(message) {
+		let randWait = Math.floor(Math.random() * 4500) + 500;
+		let randDrop = Math.random();
+		if (randDrop < 0.02) return false;
 
-class FXMLHttpRequest {}
+		setTimeout(() => {
+			if (message.processed) message.client.recieve(message); // send to client
+			else servers[message.server].addMessage(message);
+		}, randWait);
+	}
+}
+const network = new Network();
+
+class FXMLHttpRequest {
+	/**@type {Function}*/ onload;
+	/**@type {string}*/ responseText;
+	/**@type {Message}*/ #message;
+
+	open(type, address) {
+		this.#message = new Message(type, address, this);
+	}
+	/**
+	 *
+	 * @param {JSON} body
+	 */
+	send(body = null) {
+		this.#message.body = body;
+		network.send(this.#message);
+	}
+
+	recieve(response) {
+		this.responseText = response;
+		this.onload(response);
+	}
+}
+
+var fxml = new FXMLHttpRequest();
+fxml.open('GET', 'users');
+fxml.onload = (res) => {
+	console.log(res);
+	console.log('finished');
+};
+fxml.send();
