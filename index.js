@@ -239,6 +239,7 @@ class Server {
 	 * @param {Message} message
 	 */
 	sendMessage(message) {
+		message.body = JSON.stringify(message.body);
 		this.network.send(message);
 	}
 }
