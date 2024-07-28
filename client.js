@@ -47,7 +47,7 @@ function validateLogin() {
 			alert('Had problem logging in, try again.');
 		}
 	};
-	fxml.send({type:'login', username});
+	fxml.send({ type: 'login', username });
 }
 
 /**

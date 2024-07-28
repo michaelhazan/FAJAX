@@ -112,6 +112,7 @@ class ItemsDatabase {
 	}
 	#addToIndexes(userid, index) {
 		let str = this.#getIndexString(userid);
+		console.log('userid - ' + str);
 		let /** @type {Array.<Number>} */ indexes = JSON.parse(localStorage.getItem(str));
 		if (!indexes) indexes = [];
 		indexes.push(index);
@@ -171,6 +172,7 @@ class UsersDatabase {
 	 */
 	post(user) {
 		if (this.#addedUsernames.includes(this.#getUserString(user.username))) return false;
+		console.log(JSON.stringify(user));
 		localStorage.setItem(this.#getUserString(user.username), JSON.stringify(user));
 		this.#addedUsernames.push(user.username);
 	}
@@ -187,16 +189,16 @@ class UsersDatabase {
 		localStorage.removeItem(userString);
 	}
 	#getUserString(username) {
-		return `dbUsers-${username}`;
+		return `dbUsers-${JSON.stringify(username)}`;
 	}
 	#getUserStringbyID(userid) {
 		this.#addedUsernames.forEach((username) => {
 			let userString = `dbUsers-${username}`;
-			if (this.#getUser(userString).userid == userid) return userString;
+			if (this.#getUser(userString).userid == userid) return JSON.stringify(userString);
 		});
 	}
 	#getUser(userString) {
-		return JSON.parse(localStorage.getItem(userString));
+		return JSON.parse(localStorage.getItem(JSON.stringify(userString)));
 	}
 }
 class Server {

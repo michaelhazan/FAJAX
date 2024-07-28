@@ -68,10 +68,13 @@ li {
 }
 
 footer {
+	position: absolute;
 	color: rgb(100, 100, 100);
+	bottom: 0;
 }
 
 .login {
+	display: flex;
 	align-items: center;
 	justify-content: center;
 	text-align: center;
