@@ -61,7 +61,7 @@ function updateList() {
       list.appendChild(itemElement);
     }
   }
-  fxml.send(JSON.stringify({userid}));
+  fxml.send({userid});
 }
 
 function addItem() {

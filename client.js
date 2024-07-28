@@ -49,7 +49,7 @@ function validateLogin() {
       alert('Had problem logging in, try again.')
     }
   }
-  fxml.send(JSON.stringify(user));
+  fxml.send(user);
 }
 
 /**
@@ -84,7 +84,7 @@ function validateSignup() {
       alert('Had problem signing up, try again.')
     }
   }
-  fxml.send(JSON.stringify(user));
+  fxml.send(user);
 }
 
 /**

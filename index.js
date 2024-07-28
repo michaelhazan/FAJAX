@@ -483,10 +483,3 @@ class FXMLHttpRequest {
 		this.onload(response);
 	}
 }
-let fxml = new FXMLHttpRequest();
-fxml.open('POST', 'users');
-fxml.onload = (message) => {
-	console.log(message);
-};
-fxml.send();
-//
