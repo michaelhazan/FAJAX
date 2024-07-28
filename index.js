@@ -475,6 +475,7 @@ class FXMLHttpRequest {
 	 */
 	send(body = null) {
 		if (body) this.#message.body = JSON.stringify(body);
+		else this.#message.body = JSON.stringify({});
 		this.#network.send(this.#message);
 	}
 
