@@ -15,24 +15,6 @@ function updateList() {
 	const list = document.querySelector('#item-list');
 	let itemElement;
 
-	// itemArray.sort((a, b) => {
-	//   if(!a.marked && b.marked) return -1;
-	//   if(a.marked && !b.marked) return 1;
-	//   return a.text < b.text? -1 : 1;
-	// })
-
-	// list.innerHTML = "";
-	// for (const item of itemArray) {
-	//   itemElement = document.createElement('li');
-	//   itemElement.classList.add('list-item')
-	//   itemElement.textContent = item.text;
-	//   if(item.marked) {
-	//     itemElement.classList.add('marked');
-	//   }
-	//   itemElement.addEventListener('click', changeItem)
-	//   list.appendChild(itemElement);
-	// }
-
 	let userid = sessionStorage.getItem('current');
 	if (!userid) {
 		alert('oops. problem. sign in again please');
