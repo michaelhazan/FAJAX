@@ -386,7 +386,7 @@ class UsersServer extends Server {
 			case 'login':
 				let userid = false;
 				let res = this.#UsersDB.get(body.username);
-				if (res || res.password == body.password) userid = res.userid;
+				if (res && res.password == body.password) userid = res.userid;
 				message.body = { 'userid': userid };
 				break;
 			default:

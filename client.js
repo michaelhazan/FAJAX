@@ -40,7 +40,7 @@ function validateLogin() {
 	const fxml = new FXMLHttpRequest();
 	fxml.open('GET', 'users');
 	fxml.onload = function () {
-		let userid = fxml.responseText;
+		let userid = fxml.responseText.userid;
 		if (userid) {
 			entrySuccess(userid, username);
 		} else {
@@ -74,7 +74,7 @@ function validateSignup() {
 	const fxml = new FXMLHttpRequest();
 	fxml.open('POST', 'users');
 	fxml.onload = function () {
-		let userid = fxml.responseText;
+		let userid = fxml.responseText.userid;
 		if (userid) {
 			entrySuccess(userid, username);
 		} else {
