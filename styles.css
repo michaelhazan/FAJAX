@@ -1,3 +1,8 @@
+html {
+	font-family: 'Courier New', Courier, monospace;
+	background-color: rgb(37, 37, 37);
+	color: white;
+}
 body {
 	display: flex;
 	flex-direction: column;
@@ -73,15 +78,26 @@ footer {
 	bottom: 0;
 }
 
-.login {
+.login,
+.signup {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	text-align: center;
 }
-
-#login-form fieldset {
-	align-items: center;
-	justify-content: center;
-	text-align: center;
+.login a,
+.signup a {
+	text-decoration: none;
+	color: aquamarine;
+}
+.login a:hover,
+.signup a:hover {
+	cursor: pointer;
+}
+.login input,
+.signup input {
+	float: right;
+}
+.login button,
+.signup button {
 }

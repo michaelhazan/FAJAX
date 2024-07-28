@@ -430,7 +430,10 @@ class UsersServer extends Server {
 		let amountOfUsers = this.#UsersDB.get();
 		let userid = `${amountOfUsers}`;
 		for (let i = 0; i < this.#userIDLength - amountOfUsers.toString().length; i++) {
-			userid += `${Math.random() * 9}`;
+			let rand = Number.parseInt(Math.random() * (9 - 1) + 1);
+			console.log(`rand ${rand}`);
+			userid += `${rand}`;
+			console.log(userid);
 		}
 		return Number.parseInt(userid);
 	}
