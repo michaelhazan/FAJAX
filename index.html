@@ -17,7 +17,7 @@
 		<!-- templates -->
 		<template id="login-template">
 			<h1>Log in to your list</h1>
-			<form id="login-from" onsubmit="validateLogin()">
+			<form id="login-from" onsubmit="validateLogin();return false">
 				<fieldset>
 					<legend>Log in</legend>
 					<label for="login-username">Username:
@@ -32,18 +32,17 @@
 
 		<template id="signup-template">
 			<h1>Sign up for a new account!</h1>
-			<form>
+			<form id="signup-form" onsubmit="validateSignup();return false">
 				<fieldset>
 					<legend>Sign up</legend>
 					<label for="signup-username">Username (6-20 characters):
 					<input type="text" id="signup-username" name="signup-username" required minlength="6" maxlength="20"></label>
-					<label for="age">Age:
-					<input type="number" id="age" name="age" max="130" min="2" required></label>
 					<label for="signup-password">Password (8-32 characters):
 					<input type="password" id="signup-password" name="signup-password" required minlength="8" maxlength="32"></label>
 					<label for="pw-verification">Confirm password:
 					<input type="password" id="pw-verification" name="pw-verification" required minlength="8" maxlength="32"></label>
 					<button>SIGN UP</button>
+					<p class="validation-text"></p>
 				</fieldset>
 			</form>
 			<a class="nav-link" onclick="navigate('login')">Already have an account? Log in!</a>

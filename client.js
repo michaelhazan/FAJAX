@@ -10,6 +10,7 @@ function init() {
   gameTemp = document.querySelector('#list-template');
   userid = null;
   page.appendChild(loginTemp.content.cloneNode(true));
+  document.removeEventListener('DOMContentLoaded', init);
 }
 
 function navigate(pageName) {
@@ -46,23 +47,13 @@ function validateSignup() {
   let username = this['signup-username'].value;
   let password = this['signup-password'].value;
   let pwVerification = this['pw-verification'].value;
-
-  if (!this['signup-username'].reportValidity()) {
-    alert('invalid username');
-    this['signup-username'].reset();
-    return;
-  }
-
-  if (!this['signup-password'].reportValidity()) {
-    alert('invalid password');
-    this['signup-password'].reset();
-    return;
-  }
+  let errText = document.querySelector('.validation-text');
+  errText.textContent = "";
 
   if (password !== pwVerification) {
-    alert('passwords do not match');
-    this['signup-password'].reset();
-    this['pw-verification'].reset();
+    errText.textContent = "Passwords do not match";
+    this['signup-password'].value = "";
+    this['pw-verification'].value = "";
     return;
   }
 
