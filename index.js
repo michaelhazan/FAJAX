@@ -411,6 +411,7 @@ class UsersServer extends Server {
 		let user = new User(body.username, body.password, userid);
 		this.#UsersDB.post(user);
 		message.body = { 'userid': userid };
+		this.sendMessage(message);
 	}
 	/**
 	 * Delete function.
@@ -447,6 +448,7 @@ class Network {
 		let randWait = Math.floor(Math.random() * 4500) + 500;
 		let randDrop = Math.random();
 		if (randDrop < 0.02) return false;
+		console.log(message.responder);
 
 		setTimeout(() => {
 			if (typeof message.responder != 'string') message.responder.recieve(message); // send to client
