@@ -189,7 +189,7 @@ class UsersDatabase {
 		localStorage.removeItem(userString);
 	}
 	#getUserString(username) {
-		return `dbUsers-${JSON.stringify(username)}`;
+		return `dbUsers-${username}`;
 	}
 	#getUserStringbyID(userid) {
 		this.#addedUsernames.forEach((username) => {
