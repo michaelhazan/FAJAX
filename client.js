@@ -2,16 +2,20 @@
 
 document.addEventListener('DOMContentLoaded', init);
 const page = document.querySelector('.main-page');
-let loginTemp, signupTemp, listTemp;
+let loginTemp, signupTemp, listTemp, userid;
 
 function init() {
   loginTemp = document.querySelector('#login-template');
   signupTemp = document.querySelector('#signup-template');
   gameTemp = document.querySelector('#list-template');
+  userid = null;
   page.appendChild(loginTemp.content.cloneNode(true));
 }
 
 function navigate(pageName) {
+  if(pageName !== 'list') {
+    userid = null;
+  }
   let templateToLoad = document.querySelector('#' + pageName + "-template");
 
   page.replaceChildren(templateToLoad.content.cloneNode(true))
@@ -27,9 +31,15 @@ function validateLogin() {
   const fxml = new FXMLHttpRequest();
   fxml.open('GET', 'users');
   fxml.onload = function() {
-
+    let userid = fxml.responseText
+    if (userid) {
+      entrySuccess(userid)
+    }
+    else{
+      alert('Had problem logging in, try again.')
+    }
   }
-  fxml.send();
+  fxml.send({username, password});
 }
 
 function validateSignup() {
@@ -57,13 +67,20 @@ function validateSignup() {
   }
 
   const fxml = new FXMLHttpRequest();
-  fxml.open('GET', 'users');
+  fxml.open('POST', 'users');
   fxml.onload = function() {
-
+    let userid = fxml.responseText
+    if (userid) {
+      entrySuccess(userid)
+    }
+    else{
+      alert('Had problem signing up, try again.')
+    }
   }
   fxml.send();
 }
 
-function entrySuccess(login, username) {
-  
+function entrySuccess(id) {
+  navigate('list');
+  userid = id;
 }
