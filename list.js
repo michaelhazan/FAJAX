@@ -100,6 +100,8 @@ function renameItem(e) {
 	let newText = prompt('What do you want to rename this element?');
 	if (!newText) return;
 
+	let userid = sessionStorage.getItem('current');
+
 	const fxmlGet = new FXMLHttpRequest()
 	fxmlGet.open('GET', 'items');
 	fxmlGet.onload = function() {
@@ -120,6 +122,7 @@ function deleteItem(e) {
 	if (!confirm('Are you sure you want to delete this item?')) return;
 
 	let text = e.target.textContent;
+	let userid = sessionStorage.getItem('current');
 
 	const fxmlGet = new FXMLHttpRequest()
 	fxmlGet.open('GET', 'items');
