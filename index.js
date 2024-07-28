@@ -134,9 +134,9 @@ class ItemsDatabase {
 	}
 }
 class UsersDatabase {
-	addedUsernames;
+	#addedUsernames;
 	constructor() {
-		this.addedUsernames = [];
+		this.#addedUsernames = [];
 	}
 	/**
 	 * Get User by username
@@ -151,7 +151,7 @@ class UsersDatabase {
 	 * @param {User.userid} userid
 	 */
 	find(userid) {
-		this.addedUsernames.forEach((user) => {
+		this.#addedUsernames.forEach((user) => {
 			if (user.id == userid) return user;
 		});
 	}
@@ -160,9 +160,9 @@ class UsersDatabase {
 	 * @param {User} user
 	 */
 	post(user) {
-		if (this.addedUsernames.includes(this.#getUserString(user.username))) return false;
+		if (this.#addedUsernames.includes(this.#getUserString(user.username))) return false;
 		localStorage.setItem(this.#getUserString(user.username), user);
-		this.addedUsernames(user.username);
+		this.#addedUsernames(user.username);
 	}
 	put(userid, user) {
 		let userString = this.#getUserStringbyID(userid);
@@ -173,14 +173,14 @@ class UsersDatabase {
 		let userString = this.#getUserStringbyID(userid);
 		if (!userString) return false;
 		let user = this.#getUser(userString);
-		this.addedUsernames.splice(user.username);
+		this.#addedUsernames.splice(user.username);
 		localStorage.removeItem(userString);
 	}
 	#getUserString(username) {
 		return `dbUsers-${username}`;
 	}
 	#getUserStringbyID(userid) {
-		this.addedUsernames.forEach((username) => {
+		this.#addedUsernames.forEach((username) => {
 			let userString = `dbUsers-${username}`;
 			if (this.#getUser(userString).userid == userid) return userString;
 		});
@@ -393,8 +393,7 @@ class UsersServer extends Server {
 	 * @param {Message} message
 	 */
 	#post(message) {
-		message.body = { text: 'got this message from server' };
-		this.sendMessage(message);
+		this.#UsersDB.
 	}
 	/**
 	 * Delete function.
