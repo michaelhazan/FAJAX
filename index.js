@@ -327,6 +327,7 @@ class ItemsServer extends Server {
 	 * @param {Message} message
 	 */
 	#post(message) {
+		let body = JSON.parse(message.body);
 		if (!body.userid || !body.item) throw `Missing userid or item!`;
 		message.body = { 'response': this.#ItemsDB.post(body.userid, body.item) };
 		this.sendMessage(message);
@@ -336,6 +337,7 @@ class ItemsServer extends Server {
 	 * @param {Message} message
 	 */
 	#delete(message) {
+		let body = JSON.parse(message.body);
 		if (!body.userid || !body.itemid) throw `Missing userid or itemid!`;
 		this.#ItemsDB.delete(body.userid, body.itemid);
 	}
