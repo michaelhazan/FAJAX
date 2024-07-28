@@ -17,17 +17,17 @@
 		<!-- templates -->
 		<template id="login-template">
 			<h1>Log in to your list</h1>
-			<form id="login-from">
+			<form id="login-from" onsubmit="validateLogin()">
 				<fieldset>
 					<legend>Log in</legend>
 					<label for="login-username">Username:
-						<input type="text" id="log-in-username" name="login-username" required minlength="6" maxlength="20"></label>
+						<input type="text" id="login-username" name="login-username" required minlength="6" maxlength="20"></label>
 					<label for="login-password">Password:
 						<input type="password" id="login-password" name="login-password" required minlength="8" maxlength="32"></label>
 					<button>LOG IN</button>
 				</fieldset>
 			</form>
-			<a class="nav-link">Don't have an account? Click here to sign up!</a>
+			<a class="nav-link" onclick="navigate('signup')">Don't have an account? Click here to sign up!</a>
 		</template>
 
 		<template id="signup-template">
@@ -41,12 +41,12 @@
 					<input type="number" id="age" name="age" max="130" min="2" required></label>
 					<label for="signup-password">Password (8-32 characters):
 					<input type="password" id="signup-password" name="signup-password" required minlength="8" maxlength="32"></label>
-					<label for="password2">Confirm password:
-					<input type="password" id="password2" name="password2" required minlength="8" maxlength="32"></label>
+					<label for="pw-verification">Confirm password:
+					<input type="password" id="pw-verification" name="pw-verification" required minlength="8" maxlength="32"></label>
 					<button>SIGN UP</button>
 				</fieldset>
 			</form>
-			<a class="nav-link">Already have an account? Log in!</a>
+			<a class="nav-link" onclick="navigate('login')">Already have an account? Log in!</a>
 		</template>
 
 		<template id="list-template">
@@ -56,4 +56,5 @@
 		</template>
 	</body>
 	<script src="./index.js"></script>
+	<script src="./client.js"></script>
 </html>
