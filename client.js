@@ -40,14 +40,14 @@ function validateLogin() {
 	const fxml = new FXMLHttpRequest();
 	fxml.open('GET', 'users');
 	fxml.onload = function () {
-		let userid = fxml.responseText.userid;
+		let userid = JSON.parse(fxml.responseText.body).userid;
 		if (userid) {
 			entrySuccess(userid, username);
 		} else {
 			alert('Had problem logging in, try again.');
 		}
 	};
-	fxml.send({ type: 'login', username });
+	fxml.send({ type: 'login', username, password});
 }
 
 /**
@@ -74,7 +74,7 @@ function validateSignup() {
 	const fxml = new FXMLHttpRequest();
 	fxml.open('POST', 'users');
 	fxml.onload = function () {
-		let userid = fxml.responseText.userid;
+		let userid = JSON.parse(fxml.responseText.body).userid;
 		if (userid) {
 			entrySuccess(userid, username);
 		} else {

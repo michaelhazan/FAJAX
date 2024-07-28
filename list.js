@@ -80,8 +80,8 @@ function markItem(e) {
 	let userid = sessionStorage.getItem('current');
 	
 	const fxmlGet = new FXMLHttpRequest()
-	fxml.open('GET', 'items');
-	fxml.onload = function() {
+	fxmlGet.open('GET', 'items');
+	fxmlGet.onload = function() {
 		let itemid = this.responseText.body;
 		const fxml = new FXMLHttpRequest()
 		fxml.open('PUT', 'items');
@@ -90,7 +90,7 @@ function markItem(e) {
 		}
 		fxml.send({type: 'toggle-checked', userid, itemid});
 	}
-	fxml.send({type: 'search', userid, text});
+	fxmlGet.send({type: 'search', userid, text});
 
 
 }
@@ -101,8 +101,8 @@ function renameItem(e) {
 	if (!newText) return;
 
 	const fxmlGet = new FXMLHttpRequest()
-	fxml.open('GET', 'items');
-	fxml.onload = function() {
+	fxmlGet.open('GET', 'items');
+	fxmlGet.onload = function() {
 		let itemid = this.responseText.body;
 		let newItem = new TodoItem(newtext)
 		const fxml = new FXMLHttpRequest()
@@ -113,7 +113,7 @@ function renameItem(e) {
 		}
 		fxml.send({type: 'edit', userid, itemid, newItem});
 	}
-	fxml.send({type: 'search', userid, text});
+	fxmlGet.send({type: 'search', userid, text});
 }
 
 function deleteItem(e) {
@@ -122,8 +122,8 @@ function deleteItem(e) {
 	let text = e.target.textContent;
 
 	const fxmlGet = new FXMLHttpRequest()
-	fxml.open('GET', 'items');
-	fxml.onload = function() {
+	fxmlGet.open('GET', 'items');
+	fxmlGet.onload = function() {
 		let itemid = this.responseText.body;
 		const fxml = new FXMLHttpRequest()
 		fxml.open('DELETE', 'items');
@@ -133,7 +133,7 @@ function deleteItem(e) {
 		}
 		fxml.send({userid, itemid});
 	}
-	fxml.send({type: 'search', userid, text});
+	fxmlGet.send({type: 'search', userid, text});
 }
 
 function deleteMarked() {

@@ -306,7 +306,7 @@ class ItemsServer extends Server {
 				message.body = this.#ItemsDB.get(body.userid, body.itemid);
 				break;
 			case 'search':
-				if (!body.search) throw `Missing search!`;
+				if (!body.text) throw `Missing search!`;
 				message.body = this.#ItemsDB.find(body.userid, body.search);
 				break;
 			default:
@@ -452,7 +452,7 @@ class Network {
 	 * @param {Message} message
 	 */
 	send(message) {
-		let randWait = Math.floor(Math.random() * 4500) + 500;
+		let randWait = Math.floor(Math.random() * 2);
 		let randDrop = Math.random();
 		if (randDrop < 0.02) return false;
 		console.log(message.responder);
