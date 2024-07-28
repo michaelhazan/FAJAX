@@ -8,22 +8,19 @@
  */
 class Message {
 	/**@type {RESTAPI} */ type;
-	/**@type {boolean} */ processed;
-	/**@type {string} */ server;
-	/**@type {FXMLHttpRequest} */ client;
+	/**@type {FXMLHttpRequest || string} */ responder;
+	/**@type {FXMLHttpRequest || string} */ requester;
 	/**@type {string}*/ body;
 	/**
 	 *
 	 * @param {RESTAPI} type
-	 * @param {string} server
-	 * @param {FXMLHttpRequest} client
-	 * @param {boolean} processed
+	 * @param {FXMLHttpRequest || string} responder
+	 * @param {FXMLHttpRequest || string} requester
 	 */
-	constructor(type, server, client, processed = false) {
+	constructor(type, responder, requester) {
 		this.type = type;
-		this.processed = processed;
-		this.server = server;
-		this.client = client;
+		this.responder = responder;
+		this.requester = requester;
 		this.body = {};
 	}
 }
@@ -127,7 +124,7 @@ class ItemsDatabase {
 	 *
 	 * @param {User.userid} userid
 	 * @param {Number} itemid
-	 * @param {TodoItem} item
+	 * @param {if (!userString) return false;TodoItem} item
 	 */
 	#setItem(userid, itemid, item) {
 		localStorage.setItem(this.#getItemString(userid, itemid), item);
@@ -197,9 +194,8 @@ class Server {
 	functions;
 	network;
 
-	constructor(network) {
+	constructor() {
 		this.messages = [];
-		this.network = network;
 		setInterval(this.processMessages.bind(this), 3000);
 	}
 	addMessage(message) {
@@ -222,22 +218,26 @@ class Server {
 	processMessage(message) {
 		var messageType = message.type.toUpperCase();
 		if (this.functions[messageType]) {
-			message.processed = true;
+			// flip the values, resquester is now responder and otherwise
+			message.requester = [message.responder, (message.responder = message.requester)][0];
+
 			this.functions[messageType](message);
-		} else throw 'Not a valid REST API code.';
+		} else throw `Not a valid REST API code: ${messageType}`;
 	}
 	/**
-	 *
+	 * Sends message to network
 	 * @param {Message} message
 	 */
 	sendMessage(message) {
+		console.log(`sending message: `);
 		this.network.send(message);
 	}
 }
 class ItemsServer extends Server {
 	#ItemsDB;
 	constructor(network) {
-		super(network);
+		super();
+		this.network = network;
 		this.#ItemsDB = new ItemsDatabase();
 		this.functions = {
 			'GET': this.#get,
@@ -246,18 +246,35 @@ class ItemsServer extends Server {
 			'DELETE': this.#delete,
 		};
 	}
-	#get() {
-		// check if user has valid userid
+	/**
+	 * Get function.
+	 * @param {Message} message
+	 */
+	#get(message) {
+		let body = message.body;
 	}
-
-	#put() {}
-	#post() {}
-	#delete() {}
+	/**
+	 * Put function.
+	 * @param {Message} message
+	 */
+	#put(message) {}
+	/**
+	 * Post function.
+	 * @param {Message} message
+	 */
+	#post(message) {}
+	/**
+	 * Delete function.
+	 * @param {Message} message
+	 */
+	#delete(message) {}
 }
 class UsersServer extends Server {
 	#UsersDB;
 	constructor(network) {
-		super(network);
+		super();
+
+		this.network = network;
 		this.#UsersDB = new UsersDatabase();
 		this.functions = {
 			'GET': this.#get,
@@ -266,30 +283,61 @@ class UsersServer extends Server {
 			'DELETE': this.#delete,
 		};
 	}
+	/**
+	 * Get function.
+	 * @param {Message} message
+	 */
 	#get(message) {
-		this.network.send(message);
+		message.body = { text: 'got this message from server' };
+		this.sendMessage(message);
 	}
-	#put() {}
-	#post() {}
-	#delete() {}
+	/**
+	 * Put function.
+	 * @param {Message} message
+	 */
+	#put(message) {
+		message.body = { text: 'got this message from server' };
+		this.sendMessage(message);
+	}
+	/**
+	 * Post function.
+	 * @param {Message} message
+	 */
+	#post(message) {
+		message.body = { text: 'got this message from server' };
+		this.sendMessage(message);
+	}
+	/**
+	 * Delete function.
+	 * @param {Message} message
+	 */
+	#delete(message) {}
 }
+
 class Network {
 	#servers;
 	constructor() {
-		this.#servers = { 'users': new UsersServer(this), 'items': new ItemsServer(this) };
+		this.#servers = {
+			'users': new UsersServer(this),
+			'items': new ItemsServer(this),
+		};
+	}
+	test(message) {
+		this.#servers['users'].sendMessage(new Message('POST', message.requester, message.responder));
 	}
 	/**
 	 * Sends message to specified address
 	 * @param {Message} message
 	 */
 	send(message) {
+		console.log(this.#servers['users']);
 		let randWait = Math.floor(Math.random() * 4500) + 500;
 		let randDrop = Math.random();
 		if (randDrop < 0.02) return false;
 
 		setTimeout(() => {
-			if (message.processed) message.client.recieve(message); // send to client
-			else this.#servers[message.server].addMessage(message);
+			if (typeof message.responder != 'string') message.responder.recieve(message); // send to client
+			else this.#servers[message.responder].addMessage(message);
 		}, randWait);
 	}
 }
@@ -310,7 +358,7 @@ class FXMLHttpRequest {
 	 * @param {JSON} body
 	 */
 	send(body = null) {
-		this.#message.body = body;
+		if (body) this.#message.body = body;
 		this.#network.send(this.#message);
 	}
 
@@ -319,5 +367,10 @@ class FXMLHttpRequest {
 		this.onload(response);
 	}
 }
-
+let fxml = new FXMLHttpRequest();
+fxml.open('POST', 'users');
+fxml.onload = (message) => {
+	console.log(message);
+};
+fxml.send();
 //
