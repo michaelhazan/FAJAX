@@ -31,6 +31,11 @@ class User {
 	/**@type {string} */ username;
 	/**@type {string} */ password;
 	/**@type {Number} */ userid;
+	constructor(username, password, userid) {
+		this.username = username;
+		this.password = password;
+		this.userid = userid;
+	}
 }
 
 class TodoItem {
@@ -121,7 +126,8 @@ class ItemsDatabase {
 		return JSON.parse(localStorage.getItem(this.#getItemString(userid, itemid)));
 	}
 	/**
-	 *
+	 *username
+username
 	 * @param {User.userid} userid
 	 * @param {Number} itemid
 	 * @param {if (!userString) return false;TodoItem} item
@@ -142,9 +148,9 @@ class UsersDatabase {
 	 * Get User by username
 	 * @param {User.userid} userid
 	 */
-	get(username) {
+	get(username = null) {
 		if (username) return JSON.parse(localStorage.getItem(this.#getUserString(username)));
-		return false;
+		return this.#addedUsernames.length;
 	}
 	/**
 	 * Find User by userid.
@@ -349,6 +355,7 @@ class ItemsServer extends Server {
 
 class UsersServer extends Server {
 	#UsersDB;
+	#userIDLength;
 	constructor(network) {
 		super();
 
@@ -360,6 +367,8 @@ class UsersServer extends Server {
 			'POST': this.#post.bind(this),
 			'DELETE': this.#delete.bind(this),
 		};
+
+		this.#userIDLength = 10;
 	}
 	/**
 	 * Get function.
@@ -385,21 +394,37 @@ class UsersServer extends Server {
 	 * @param {Message} message
 	 */
 	#put(message) {
-		message.body = { text: 'got this message from server' };
+		message.body = {};
+		message.type = 'POST';
 		this.sendMessage(message);
 	}
 	/**
-	 * Post function.
+	 * Post function.this.#userIDLength - amountOfUsers.toString().length
 	 * @param {Message} message
 	 */
 	#post(message) {
-		this.#UsersDB.
+		let body = JSON.parse(message.body);
+		if (!body.username || !body.password) throw `Missing username / password!`;
+		if (this.#UsersDB.get(body.username)) throw `Username already exists!`;
+		let userid = this.#generateUserID();
+		let user = new User(body.username, body.password, userid);
+		this.#UsersDB.post(user);
+		message.body = { 'userid': userid };
 	}
 	/**
 	 * Delete function.
 	 * @param {Message} message
 	 */
 	#delete(message) {}
+
+	#generateUserID() {
+		let amountOfUsers = this.#UsersDB.get();
+		let userid = `${amountOfUsers}`;
+		for (let i = 0; i < this.#userIDLength - amountOfUsers.toString().length; i++) {
+			userid += `${Math.random() * 9}`;
+		}
+		return Number.parseInt(userid);
+	}
 }
 
 class Network {
