@@ -2,21 +2,17 @@
 
 document.addEventListener('DOMContentLoaded', init);
 const page = document.querySelector('.main-page');
-let loginTemp, signupTemp, listTemp, userid;
+let loginTemp, signupTemp, listTemp;
 
 function init() {
   loginTemp = document.querySelector('#login-template');
   signupTemp = document.querySelector('#signup-template');
   gameTemp = document.querySelector('#list-template');
-  userid = null;
   page.appendChild(loginTemp.content.cloneNode(true));
   document.removeEventListener('DOMContentLoaded', init);
 }
 
 function navigate(pageName) {
-  if(pageName !== 'list') {
-    userid = null;
-  }
   let templateToLoad = document.querySelector('#' + pageName + "-template");
 
   page.replaceChildren(templateToLoad.content.cloneNode(true))
@@ -34,7 +30,7 @@ function validateLogin() {
   fxml.onload = function() {
     let userid = fxml.responseText
     if (userid) {
-      entrySuccess(userid)
+      entrySuccess(userid, username)
     }
     else{
       alert('Had problem logging in, try again.')
@@ -62,7 +58,7 @@ function validateSignup() {
   fxml.onload = function() {
     let userid = fxml.responseText
     if (userid) {
-      entrySuccess(userid)
+      entrySuccess(userid, username)
     }
     else{
       alert('Had problem signing up, try again.')
@@ -71,7 +67,7 @@ function validateSignup() {
   fxml.send();
 }
 
-function entrySuccess(id) {
+function entrySuccess(userid, username) {
   navigate('list');
-  userid = id;
+  updateList(userid, username)
 }
