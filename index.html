@@ -4,11 +4,11 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>List!</title>
-		<link rel="stylesheet" href="./styles.css">
+		<link rel="stylesheet" href="./styles.css" />
 	</head>
 	<body>
 		<header>
-			<h1>YourList</h1>
+			<h1>Your List</h1>
 		</header>
 		<main class="main-page"></main>
 		<footer>
@@ -18,13 +18,15 @@
 		<!-- templates -->
 		<template id="login-template">
 			<h1>Log in to your list</h1>
-			<form id="login-from" onsubmit="validateLogin();return false">
+			<form id="login-form" onsubmit="validateLogin();return false">
 				<fieldset>
 					<legend>Log in</legend>
-					<label for="login-username">Username:
-						<input type="text" id="login-username" name="login-username" required minlength="6" maxlength="20"></label>
-					<label for="login-password">Password:
-						<input type="password" id="login-password" name="login-password" required minlength="8" maxlength="32"></label>
+					<label for="login-username"
+						>Username: <input type="text" id="login-username" name="login-username" required minlength="6" maxlength="20"
+					/></label>
+					<label for="login-password"
+						>Password: <input type="password" id="login-password" name="login-password" required minlength="8" maxlength="32"
+					/></label>
 					<button>LOG IN</button>
 				</fieldset>
 			</form>
@@ -36,12 +38,17 @@
 			<form id="signup-form" onsubmit="validateSignup();return false">
 				<fieldset>
 					<legend>Sign up</legend>
-					<label for="signup-username">Username (6-20 characters):
-					<input type="text" id="signup-username" name="signup-username" required minlength="6" maxlength="20"></label>
-					<label for="signup-password">Password (8-32 characters):
-					<input type="password" id="signup-password" name="signup-password" required minlength="8" maxlength="32"></label>
-					<label for="pw-verification">Confirm password:
-					<input type="password" id="pw-verification" name="pw-verification" required minlength="8" maxlength="32"></label>
+					<label for="signup-username"
+						>Username (6-20 characters):
+						<input type="text" id="signup-username" name="signup-username" required minlength="6" maxlength="20"
+					/></label>
+					<label for="signup-password"
+						>Password (8-32 characters):
+						<input type="password" id="signup-password" name="signup-password" required minlength="8" maxlength="32"
+					/></label>
+					<label for="pw-verification"
+						>Confirm password: <input type="password" id="pw-verification" name="pw-verification" required minlength="8" maxlength="32"
+					/></label>
 					<button>SIGN UP</button>
 					<p class="validation-text"></p>
 				</fieldset>
@@ -51,14 +58,14 @@
 
 		<template id="list-template">
 			<h1><span id="name-span"></span>'s List</h1>
-      <div class="edit-buttons">
-        <button onclick="addItem()" class="add-button">Add</button>
-        <button onclick="toggleRenameMode()" class="rename-button">Rename</button>
-        <button onclick="toggleDeleteMode()" class="delete-button">Delete</button>
-        <button onclick="deleteMarked()" class="delete-marked-button">Delete Marked</button>
-      </div>
-      <ul id="item-list"></ul>
-      <button class="logout-button" onclick="logout()">LOG OUT</button>
+			<div class="edit-buttons">
+				<button onclick="addItem()" class="add-button">Add</button>
+				<button onclick="toggleRenameMode()" class="rename-button">Rename</button>
+				<button onclick="toggleDeleteMode()" class="delete-button">Delete</button>
+				<button onclick="deleteMarked()" class="delete-marked-button">Delete Marked</button>
+			</div>
+			<ul id="item-list"></ul>
+			<button class="logout-button" onclick="logout()">LOG OUT</button>
 		</template>
 
 		<template id="item-template">

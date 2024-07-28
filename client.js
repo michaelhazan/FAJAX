@@ -13,6 +13,7 @@ function init() {
 	signupTemp = document.querySelector('#signup-template');
 	gameTemp = document.querySelector('#list-template');
 	page.appendChild(loginTemp.content.cloneNode(true));
+	page.classList = ['login'];
 	document.removeEventListener('DOMContentLoaded', init);
 }
 
@@ -24,6 +25,7 @@ function navigate(pageName) {
 	let templateToLoad = document.querySelector('#' + pageName + '-template');
 
 	page.replaceChildren(templateToLoad.content.cloneNode(true));
+	page.classList = [pageName];
 }
 
 // form validation
