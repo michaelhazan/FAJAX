@@ -51,8 +51,14 @@
 
 		<template id="list-template">
 			<h1><span id="name-span"></span>'s List</h1>
-			<ul id="item-list"></ul>
-			<button>LOG OUT</button>
+      <div class="edit-buttons">
+        <button onclick="addItem()" class="add-button">Add</button>
+        <button onclick="toggleRenameMode()" class="rename-button">Rename</button>
+        <button onclick="toggleDeleteMode()" class="delete-button">Delete</button>
+        <button onclick="deleteMarked()" class="delete-marked-button">Delete Marked</button>
+      </div>
+      <ul id="item-list"></ul>
+      <button class="logout-button" onclick="logout()">LOG OUT</button>
 		</template>
 
 		<template id="item-template">

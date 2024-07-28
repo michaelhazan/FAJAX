@@ -4,6 +4,9 @@ document.addEventListener('DOMContentLoaded', init);
 const page = document.querySelector('.main-page');
 let loginTemp, signupTemp, listTemp;
 
+/**
+	 * initialize main page
+	 */
 function init() {
   sessionStorage.removeItem("current");
   loginTemp = document.querySelector('#login-template');
@@ -13,6 +16,10 @@ function init() {
   document.removeEventListener('DOMContentLoaded', init);
 }
 
+/**
+ * navigate to a given page in the SPA
+ * @param {string} pageName
+ */
 function navigate(pageName) {
   let templateToLoad = document.querySelector('#' + pageName + "-template");
 
@@ -22,6 +29,9 @@ function navigate(pageName) {
 
 // form validation
 
+/**
+ * Validate a log in attempt
+ */
 function validateLogin() {
   let username = this['login-username'].value;
   let password = this['login-password'].value;
@@ -42,6 +52,9 @@ function validateLogin() {
   fxml.send(JSON.stringify(user));
 }
 
+/**
+ * validates a sign up attempt
+ */
 function validateSignup() {
   let username = this['signup-username'].value;
   let password = this['signup-password'].value;
@@ -74,12 +87,22 @@ function validateSignup() {
   fxml.send(JSON.stringify(user));
 }
 
+/**
+ * called when the user succefully entered their account.
+ * puts the user on their account page and sets them as
+ * current user in local storage
+ * @param {User.userid} userid 
+ * @param {string} username 
+ */
 function entrySuccess(userid, username) {
   navigate('list');
   sessionStorage.setItem("current", userid)
   initializeList(username)
 }
 
+/**
+ * logs out the current user and returns them to login screen
+ */
 function logout() {
   sessionStorage.removeItem("current");
   navigate('login')
