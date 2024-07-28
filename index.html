@@ -17,7 +17,7 @@
 		<!-- templates -->
 		<template id="login-template">
 			<h1>Log in to your list</h1>
-			<form id="lgoin-from">
+			<form id="login-from">
 				<fieldset>
 					<legend>Log in</legend>
 					<label for="login-username">Username:
@@ -27,7 +27,7 @@
 					<button>LOG IN</button>
 				</fieldset>
 			</form>
-			<a>Don't have an account? Click here to sign up!</a>
+			<a class="nav-link">Don't have an account? Click here to sign up!</a>
 		</template>
 
 		<template id="signup-template">
@@ -46,11 +46,13 @@
 					<button>SIGN UP</button>
 				</fieldset>
 			</form>
+			<a class="nav-link">Already have an account? Log in!</a>
 		</template>
 
 		<template id="list-template">
 			<h1><span id="name"></span>'s List</h1>
 			<ul id="item-list"></ul>
+			<button>LOG OUT</button>
 		</template>
 	</body>
 	<script src="./index.js"></script>
