@@ -97,7 +97,7 @@ class ItemsDatabase {
 		let indexToRemove = indexes.indexOf(itemid);
 		if (indexToRemove == -1) return false;
 		indexes.splice(indexToRemove, 1);
-		localStorage.setItem(this.#getIndexString(userid), indexes);
+		localStorage.setItem(this.#getIndexString(userid), JSON.stringify(indexes));
 		localStorage.removeItem(this.#getItemString(userid, itemid));
 	}
 	/**
@@ -115,7 +115,7 @@ class ItemsDatabase {
 		let /** @type {Array.<Number>} */ indexes = JSON.parse(localStorage.getItem(str));
 		if (!indexes) indexes = [];
 		indexes.push(index);
-		localStorage.setItem(str, indexes);
+		localStorage.setItem(str, JSON.stringify(indexes));
 	}
 	#getIndexString(userid) {
 		return `dbData-${userid}-Index`;
@@ -137,7 +137,7 @@ username
 	 * @param {if (!userString) return false;TodoItem} item
 	 */
 	#setItem(userid, itemid, item) {
-		localStorage.setItem(this.#getItemString(userid, itemid), item);
+		localStorage.setItem(this.#getItemString(userid, itemid), JSON.stringify(item));
 	}
 	#getItemString(userid, itemid) {
 		return `dbData-${userid}-${itemid}`;
@@ -171,13 +171,13 @@ class UsersDatabase {
 	 */
 	post(user) {
 		if (this.#addedUsernames.includes(this.#getUserString(user.username))) return false;
-		localStorage.setItem(this.#getUserString(user.username), user);
+		localStorage.setItem(this.#getUserString(user.username), JSON.stringify(user));
 		this.#addedUsernames.push(user.username);
 	}
 	put(userid, user) {
 		let userString = this.#getUserStringbyID(userid);
 		if (!userString) return false;
-		localStorage.setItem(userString, user);
+		localStorage.setItem(userString, JSON.stringify(user));
 	}
 	delete(userid) {
 		let userString = this.#getUserStringbyID(userid);
