@@ -14,7 +14,6 @@ function updateList() {
   const list = document.querySelector('#item-list');
   let itemElement;
 
-  const itemTemplate = document.querySelector('#item-template');
   itemArray.sort((a, b) => {
     if(!a.marked && b.marked) return -1;
     if(a.marked && !b.marked) return 1;
@@ -28,21 +27,41 @@ function updateList() {
     itemElement.textContent = item.text;
     if(item.marked) {
       itemElement.classList.add('marked');
-      itemElement.style.textDecoration = 'line-through';
     }
     itemElement.addEventListener('click', changeItem)
     list.appendChild(itemElement);
   }
 
-  // for later 
-
-  // let userid = sessionStorage.getItem("current")
+  let userid = sessionStorage.getItem("current");
+  // if(!userid) {
+  //   alert('oops. problem. sign in again please')
+  //   navigate('login')
+  //   return;
+  // }
   
-  /* const fxml = new FXMLHttpRequest()
-  fxml.open('GET', 'items');
-  fxml.onload = function() {
-  }
-  fxml.send({userid}); */
+  // const fxml = new FXMLHttpRequest()
+  // fxml.open('GET', 'items');
+  // fxml.onload = function() {
+  //   const itemArray = JSON.parse(fxml.responseText)
+  //   itemArray.sort((a, b) => {
+  //     if(!a.marked && b.marked) return -1;
+  //     if(a.marked && !b.marked) return 1;
+  //     return a.text < b.text? -1 : 1;
+  //   })
+  
+  //   list.innerHTML = "";
+  //   for (const item of itemArray) {
+  //     itemElement = document.createElement('li');
+  //     itemElement.classList.add('list-item')
+  //     itemElement.textContent = item.text;
+  //     if(item.marked) {
+  //       itemElement.classList.add('marked');
+  //     }
+  //     itemElement.addEventListener('click', changeItem)
+  //     list.appendChild(itemElement);
+  //   }
+  // }
+  // fxml.send(JSON.stringify({userid}));
 }
 
 function addItem() {
@@ -51,10 +70,15 @@ function addItem() {
     text: name,
     marked: false
   }
+  const toAdd = {item, userid}
 
   itemArray.push(item);
 
-  // post request with a body of item
+  // const fxml = new FXMLHttpRequest()
+  // fxml.open('POST', 'items');
+  // fxml.onload = function() {
+  // }
+  // fxml.send(JSON.stringify(toAdd));
 
   updateList()
 }
@@ -78,21 +102,22 @@ function markItem(e) {
       item.marked = !item.marked;
     }
   }
-  // put request with a body of item
+  
+  // const fxml = new FXMLHttpRequest()
+  // fxml.open('PUT', 'items');
+  // fxml.onload = function() {
+  //  
+  // }
+  // fxml.send(/);
+
   updateList()
-}
-
-function toggleRenameMode() {
-  renameMode = !renameMode
-}
-
-function toggleDeleteMode() {
-  deleteMode = !deleteMode
 }
 
 function renameItem(e) {
   let text = e.target.textContent;
   let newText = prompt('What do you want to rename this element?');
+  if (!newText) 
+    return;
 
   for (const item of itemArray) {
     if(item.text === text) {
@@ -101,12 +126,15 @@ function renameItem(e) {
   }
 
   // put request with the new name
-
+  
   updateList();
-  renameMode = false;
+  toggleRenameMode()
 }
 
 function deleteItem(e) {
+  if (!confirm('Are you sure you want to delete this item?'))
+    return;
+  
   let text = e.target.textContent;
   let index = -1;
   
@@ -115,11 +143,40 @@ function deleteItem(e) {
       index = i;
     }
   }
-
+  
   itemArray.splice(index, 1)
-
+  
   // delete request with a body of item
-
+  
   updateList();
-  deleteMode = false;
+  toggleDeleteMode()
+}
+
+function deleteMarked() {
+  let i = 0, j = 0;
+  
+  while (i < itemArray.length) {
+    const item = itemArray[i];
+    if (!item.marked) itemArray[j++] = item;
+    i++;
+  }
+  
+  itemArray.length = j;
+  updateList();
+}
+
+function toggleRenameMode() {
+  renameMode = !renameMode
+  if(renameMode && deleteMode) {
+    toggleDeleteMode()
+  }
+  document.querySelector(".rename-button").classList.toggle('clicked')
+}
+
+function toggleDeleteMode() {
+  deleteMode = !deleteMode
+  if(renameMode && deleteMode) {
+    toggleRenameMode()
+  }
+  document.querySelector(".delete-button").classList.toggle('clicked')
 }
