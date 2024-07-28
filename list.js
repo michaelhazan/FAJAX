@@ -70,17 +70,19 @@ function addItem() {
     text: name,
     marked: false
   }
+
+  let userid = sessionStorage.getItem('current')
   const toAdd = {item, userid}
 
-  itemArray.push(item);
+  // itemArray.push(item);
 
-  // const fxml = new FXMLHttpRequest()
-  // fxml.open('POST', 'items');
-  // fxml.onload = function() {
-  // }
-  // fxml.send(JSON.stringify(toAdd));
+  const fxml = new FXMLHttpRequest()
+  fxml.open('POST', 'items');
+  fxml.onload = function() {
+    updateList()
+  }
+  fxml.send(JSON.stringify(toAdd));
 
-  updateList()
 }
 
 function changeItem(e) {
