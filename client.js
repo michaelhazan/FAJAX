@@ -37,8 +37,6 @@ function validateLogin() {
 	let username = this['login-username'].value;
 	let password = this['login-password'].value;
 
-	user = { username, password };
-
 	const fxml = new FXMLHttpRequest();
 	fxml.open('GET', 'users');
 	fxml.onload = function () {
@@ -49,7 +47,7 @@ function validateLogin() {
 			alert('Had problem logging in, try again.');
 		}
 	};
-	fxml.send(user);
+	fxml.send({type:'login', username});
 }
 
 /**

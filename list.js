@@ -70,8 +70,7 @@ function addItem() {
 	const item = new TodoItem(name);
 
 	let userid = sessionStorage.getItem('current');
-	const toAdd = { userid: userid, item: item };
-
+	
 	// itemArray.push(item);
 
 	const fxml = new FXMLHttpRequest();
@@ -79,7 +78,7 @@ function addItem() {
 	fxml.onload = function () {
 		updateList();
 	};
-	fxml.send(toAdd);
+	fxml.send({ userid: userid, item: item });
 }
 
 function changeItem(e) {
@@ -96,20 +95,22 @@ function changeItem(e) {
 
 function markItem(e) {
 	let text = e.target.textContent;
-	for (const item of itemArray) {
-		if (item.text === text) {
-			item.marked = !item.marked;
+	let userid = sessionStorage.getItem('current');
+	
+	const fxmlGet = new FXMLHttpRequest()
+	fxml.open('GET', 'items');
+	fxml.onload = function() {
+		let itemid = this.responseText.body;
+		const fxml = new FXMLHttpRequest()
+		fxml.open('PUT', 'items');
+		fxml.onload = function() {
+			updateList();
 		}
+		fxml.send({type: 'toggle-checked', userid, itemid});
 	}
+	fxml.send({type: 'search', userid, text});
 
-	// const fxml = new FXMLHttpRequest()
-	// fxml.open('PUT', 'items');
-	// fxml.onload = function() {
-	//
-	// }
-	// fxml.send(/);
 
-	updateList();
 }
 
 function renameItem(e) {
@@ -117,36 +118,40 @@ function renameItem(e) {
 	let newText = prompt('What do you want to rename this element?');
 	if (!newText) return;
 
-	for (const item of itemArray) {
-		if (item.text === text) {
-			item.text = newText;
+	const fxmlGet = new FXMLHttpRequest()
+	fxml.open('GET', 'items');
+	fxml.onload = function() {
+		let itemid = this.responseText.body;
+		let newItem = new TodoItem(newtext)
+		const fxml = new FXMLHttpRequest()
+		fxml.open('PUT', 'items');
+		fxml.onload = function() {
+			updateList();
+			toggleRenameMode();
 		}
+		fxml.send({type: 'edit', userid, itemid, newItem});
 	}
-
-	// put request with the new name
-
-	updateList();
-	toggleRenameMode();
+	fxml.send({type: 'search', userid, text});
 }
 
 function deleteItem(e) {
 	if (!confirm('Are you sure you want to delete this item?')) return;
 
 	let text = e.target.textContent;
-	let index = -1;
 
-	for (let i in itemArray) {
-		if (itemArray[i].text === text) {
-			index = i;
+	const fxmlGet = new FXMLHttpRequest()
+	fxml.open('GET', 'items');
+	fxml.onload = function() {
+		let itemid = this.responseText.body;
+		const fxml = new FXMLHttpRequest()
+		fxml.open('DELETE', 'items');
+		fxml.onload = function() {
+			updateList();
+			toggleDeleteMode();
 		}
+		fxml.send({userid, itemid});
 	}
-
-	itemArray.splice(index, 1);
-
-	// delete request with a body of item
-
-	updateList();
-	toggleDeleteMode();
+	fxml.send({type: 'search', userid, text});
 }
 
 function deleteMarked() {
