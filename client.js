@@ -5,6 +5,7 @@ const page = document.querySelector('.main-page');
 let loginTemp, signupTemp, listTemp;
 
 function init() {
+  sessionStorage.removeItem("current");
   loginTemp = document.querySelector('#login-template');
   signupTemp = document.querySelector('#signup-template');
   gameTemp = document.querySelector('#list-template');
@@ -69,5 +70,11 @@ function validateSignup() {
 
 function entrySuccess(userid, username) {
   navigate('list');
-  updateList(userid, username)
+  sessionStorage.setItem("current", userid)
+  initializeList(username)
+}
+
+function logout() {
+  sessionStorage.removeItem("current");
+  navigate('login')
 }

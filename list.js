@@ -1,18 +1,16 @@
 // testing ONLY
 const itemArray = [{text: 'exercise', marked: false}, {text: 'sleep', marked: true}, {text: 'work', marked: false}, {text: 'eat lunch', marked: false}];
 
-let currentID = null;
 let renameMode = false, deleteMode = false;
 
-function init(username, userid) {
+function initializeList(username) {
   const nameSpan = document.querySelector('#name-span');
 
   nameSpan.textContent = username;
-  currentID = userid;
-  updateList(userid);
+  updateList();
 }
 
-function updateList(userid) {
+function updateList() {
   const list = document.querySelector('#item-list');
   let itemElement;
 
@@ -37,6 +35,8 @@ function updateList(userid) {
   }
 
   // for later 
+
+  // let userid = sessionStorage.getItem("current")
   
   /* const fxml = new FXMLHttpRequest()
   fxml.open('GET', 'items');
@@ -79,7 +79,7 @@ function markItem(e) {
     }
   }
   // put request with a body of item
-  updateList(currentID)
+  updateList()
 }
 
 function toggleRenameMode() {
@@ -102,7 +102,7 @@ function renameItem(e) {
 
   // put request with the new name
 
-  updateList(currentID);
+  updateList();
   renameMode = false;
 }
 
@@ -120,6 +120,6 @@ function deleteItem(e) {
 
   // delete request with a body of item
 
-  updateList(currentID);
+  updateList();
   deleteMode = false;
 }
