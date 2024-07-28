@@ -21,7 +21,7 @@ class Message {
 		this.type = type;
 		this.responder = responder;
 		this.requester = requester;
-		this.body = {};
+		this.body = '';
 	}
 }
 /**
@@ -229,10 +229,40 @@ class Server {
 	 * @param {Message} message
 	 */
 	sendMessage(message) {
-		console.log(`sending message: `);
 		this.network.send(message);
 	}
 }
+/**
+ * get:
+ *
+ * 	{type:'list', userid:(userid)} - Gets the list of all of the items related with userid.
+ *
+ * 	{type:'item', userid:(userid), itemid:(itemid)} - Get item by userid and itemid.
+ *
+ * 	{type:'search', userid:(userid), search:(string)} - Get item by userid and itemid.
+ *
+ * \ end of get /
+ *
+ * put:
+ *
+ * 	{type:'edit',userid:(userid), itemid:(itemid), item: (TodoItem) } - Edit item by userid and itemid, change it to item.
+ *
+ * 	{type:'toggle-checked',userid:(userid), itemid:(itemid) } - Check / Uncheck an item.
+ *
+ * \ end of put /
+ *
+ * post:
+ *
+ *	{userid: (userid), item:(TodoItem)} - Add a new item by userid.
+ *
+ * \ end of post /
+ *
+ * delete:
+ *
+ *	{userid: (userid), itemid: (itemid)} - Delete an item by userid and itemid.
+ *
+ * \ end of delete /
+ */
 class ItemsServer extends Server {
 	#ItemsDB;
 	constructor(network) {
@@ -240,10 +270,10 @@ class ItemsServer extends Server {
 		this.network = network;
 		this.#ItemsDB = new ItemsDatabase();
 		this.functions = {
-			'GET': this.#get,
-			'PUT': this.#put,
-			'POST': this.#post,
-			'DELETE': this.#delete,
+			'GET': this.#get.bind(this),
+			'PUT': this.#put.bind(this),
+			'POST': this.#post.bind(this),
+			'DELETE': this.#delete.bind(this),
 		};
 	}
 	/**
@@ -251,24 +281,72 @@ class ItemsServer extends Server {
 	 * @param {Message} message
 	 */
 	#get(message) {
-		let body = message.body;
+		let body = JSON.parse(message.body);
+		if (!body.userid) throw `Missing userid!`;
+		message.type = 'POST';
+		switch (body.type) {
+			case 'list':
+				message.body = this.#ItemsDB.get(body.userid);
+				break;
+			case 'item':
+				if (!body.itemid) throw `Missing itemid!`;
+				message.body = this.#ItemsDB.get(body.userid, body.itemid);
+				break;
+			case 'search':
+				if (!body.search) throw `Missing search!`;
+				message.body = this.#ItemsDB.find(body.userid, body.search);
+				break;
+			default:
+				throw 'No or Invalid type specified!';
+		}
+		this.sendMessage(message);
 	}
 	/**
 	 * Put function.
 	 * @param {Message} message
 	 */
-	#put(message) {}
+	#put(message) {
+		let body = JSON.parse(message.body);
+		if (!body.userid || !body.itemid) throw `Missing userid or itemid!`;
+		switch (body.type) {
+			case 'edit':
+				if (!body.item) throw `Missing Item!`;
+				if (typeof body.item != TodoItem) throw `Incorrect item type! (not a TodoItem).`;
+				message.body = this.#ItemsDB.put(body.userid, body.itemid, body.item);
+				break;
+			case 'toggle-checked':
+				let item = this.#ItemsDB.get(body.userid, body.itemid)[0];
+				item.marked = true;
+				this.#ItemsDB.put(body.userid, body.itemid, item);
+		}
+
+		this.sendMessage(message);
+	}
 	/**
 	 * Post function.
 	 * @param {Message} message
 	 */
-	#post(message) {}
+	#post(message) {
+		let body = JSON.parse(message.body);
+		if (!body.userid || !body.item) throw `Missing userid or item!`;
+		message.body = { 'response': this.#ItemsDB.post(body.userid, body.item) };
+		this.sendMessage(message);
+	}
 	/**
 	 * Delete function.
 	 * @param {Message} message
 	 */
-	#delete(message) {}
+	#delete(message) {
+		let body = JSON.parse(message.body);
+		if (!body.userid || !body.itemid) throw `Missing userid or itemid!`;
+		this.#ItemsDB.delete(body.userid, body.itemid);
+	}
 }
+/**
+ * get:
+ * 	{type:'login', username:(username)} - Gets the list of all of the items related with userid
+ */
+
 class UsersServer extends Server {
 	#UsersDB;
 	constructor(network) {
@@ -277,10 +355,10 @@ class UsersServer extends Server {
 		this.network = network;
 		this.#UsersDB = new UsersDatabase();
 		this.functions = {
-			'GET': this.#get,
-			'PUT': this.#put,
-			'POST': this.#post,
-			'DELETE': this.#delete,
+			'GET': this.#get.bind(this),
+			'PUT': this.#put.bind(this),
+			'POST': this.#post.bind(this),
+			'DELETE': this.#delete.bind(this),
 		};
 	}
 	/**
@@ -288,7 +366,18 @@ class UsersServer extends Server {
 	 * @param {Message} message
 	 */
 	#get(message) {
-		message.body = { text: 'got this message from server' };
+		let body = JSON.parse(message.body);
+		message.type = 'POST';
+		switch (body.type) {
+			case 'login':
+				let userid = false;
+				let res = this.#UsersDB.get(body.username);
+				if (res || res.password == body.password) userid = res.userid;
+				message.body = { 'userid': userid };
+				break;
+			default:
+				throw 'No or Invalid type specified!';
+		}
 		this.sendMessage(message);
 	}
 	/**
@@ -330,7 +419,6 @@ class Network {
 	 * @param {Message} message
 	 */
 	send(message) {
-		console.log(this.#servers['users']);
 		let randWait = Math.floor(Math.random() * 4500) + 500;
 		let randDrop = Math.random();
 		if (randDrop < 0.02) return false;
@@ -349,16 +437,20 @@ class FXMLHttpRequest {
 	constructor() {
 		this.#network = new Network();
 	}
-
+	/**
+	 *
+	 * @param {string} type
+	 * @param {string} address
+	 */
 	open(type, address) {
-		this.#message = new Message(type, address, this);
+		this.#message = new Message(type.toUpperCase(), address, this);
 	}
 	/**
 	 *
 	 * @param {JSON} body
 	 */
 	send(body = null) {
-		if (body) this.#message.body = body;
+		if (body) this.#message.body = JSON.stringify(body);
 		this.#network.send(this.#message);
 	}
 
