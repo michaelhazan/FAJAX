@@ -1,5 +1,5 @@
 // testing ONLY
-const itemArray = [{text: 'exercise', marked: false}, {text: 'sleep', marked: true}, {text: 'work', marked: false}, {text: 'eat lunch', marked: false}];
+// const itemArray = [{text: 'exercise', marked: false}, {text: 'sleep', marked: true}, {text: 'work', marked: false}, {text: 'eat lunch', marked: false}];
 
 let renameMode = false, deleteMode = false;
 
@@ -14,54 +14,54 @@ function updateList() {
   const list = document.querySelector('#item-list');
   let itemElement;
 
-  itemArray.sort((a, b) => {
-    if(!a.marked && b.marked) return -1;
-    if(a.marked && !b.marked) return 1;
-    return a.text < b.text? -1 : 1;
-  })
+  // itemArray.sort((a, b) => {
+  //   if(!a.marked && b.marked) return -1;
+  //   if(a.marked && !b.marked) return 1;
+  //   return a.text < b.text? -1 : 1;
+  // })
 
-  list.innerHTML = "";
-  for (const item of itemArray) {
-    itemElement = document.createElement('li');
-    itemElement.classList.add('list-item')
-    itemElement.textContent = item.text;
-    if(item.marked) {
-      itemElement.classList.add('marked');
-    }
-    itemElement.addEventListener('click', changeItem)
-    list.appendChild(itemElement);
-  }
+  // list.innerHTML = "";
+  // for (const item of itemArray) {
+  //   itemElement = document.createElement('li');
+  //   itemElement.classList.add('list-item')
+  //   itemElement.textContent = item.text;
+  //   if(item.marked) {
+  //     itemElement.classList.add('marked');
+  //   }
+  //   itemElement.addEventListener('click', changeItem)
+  //   list.appendChild(itemElement);
+  // }
 
   let userid = sessionStorage.getItem("current");
-  // if(!userid) {
-  //   alert('oops. problem. sign in again please')
-  //   navigate('login')
-  //   return;
-  // }
+  if(!userid) {
+    alert('oops. problem. sign in again please')
+    navigate('login')
+    return;
+  }
   
-  // const fxml = new FXMLHttpRequest()
-  // fxml.open('GET', 'items');
-  // fxml.onload = function() {
-  //   const itemArray = JSON.parse(fxml.responseText)
-  //   itemArray.sort((a, b) => {
-  //     if(!a.marked && b.marked) return -1;
-  //     if(a.marked && !b.marked) return 1;
-  //     return a.text < b.text? -1 : 1;
-  //   })
+  const fxml = new FXMLHttpRequest()
+  fxml.open('GET', 'items');
+  fxml.onload = function() {
+    const itemArray = JSON.parse(fxml.responseText)
+    itemArray.sort((a, b) => {
+      if(!a.marked && b.marked) return -1;
+      if(a.marked && !b.marked) return 1;
+      return a.text < b.text? -1 : 1;
+    })
   
-  //   list.innerHTML = "";
-  //   for (const item of itemArray) {
-  //     itemElement = document.createElement('li');
-  //     itemElement.classList.add('list-item')
-  //     itemElement.textContent = item.text;
-  //     if(item.marked) {
-  //       itemElement.classList.add('marked');
-  //     }
-  //     itemElement.addEventListener('click', changeItem)
-  //     list.appendChild(itemElement);
-  //   }
-  // }
-  // fxml.send(JSON.stringify({userid}));
+    list.innerHTML = "";
+    for (const item of itemArray) {
+      itemElement = document.createElement('li');
+      itemElement.classList.add('list-item')
+      itemElement.textContent = item.text;
+      if(item.marked) {
+        itemElement.classList.add('marked');
+      }
+      itemElement.addEventListener('click', changeItem)
+      list.appendChild(itemElement);
+    }
+  }
+  fxml.send(JSON.stringify({userid}));
 }
 
 function addItem() {
