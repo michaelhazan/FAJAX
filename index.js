@@ -168,7 +168,7 @@ class UsersDatabase {
 	post(user) {
 		if (this.#addedUsernames.includes(this.#getUserString(user.username))) return false;
 		localStorage.setItem(this.#getUserString(user.username), user);
-		this.#addedUsernames(user.username);
+		this.#addedUsernames.push(user.username);
 	}
 	put(userid, user) {
 		let userString = this.#getUserStringbyID(userid);
@@ -404,7 +404,8 @@ class UsersServer extends Server {
 	 */
 	#post(message) {
 		let body = JSON.parse(message.body);
-		if (!body.username || !body.password) throw `Missing username / password!`;
+		console.log(body);
+		if (!body['username'] || !body['password']) throw `Missing username / password!`;
 		if (this.#UsersDB.get(body.username)) throw `Username already exists!`;
 		let userid = this.#generateUserID();
 		let user = new User(body.username, body.password, userid);
@@ -475,11 +476,13 @@ class FXMLHttpRequest {
 	 */
 	send(body = null) {
 		if (body) this.#message.body = JSON.stringify(body);
+		else this.#message.body = JSON.stringify({});
+		console.log(this.#message);
 		this.#network.send(this.#message);
 	}
 
 	recieve(response) {
 		this.responseText = response;
-		this.onload(response);
+		this.onload();
 	}
 }
