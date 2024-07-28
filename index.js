@@ -75,10 +75,11 @@ class ItemsDatabase {
 	 * @returns
 	 */
 	find(userid, str) {
-		let items = this.get(userid);
+		let indexes = this.#getIndexes(userid);
 		let ret = [];
-		items.forEach((item) => {
-			if (item.text.indexOf(str) != -1) ret.push(item);
+		indexes.forEach((index) => {
+			let /**@type {TodoItem} */ item = JSON.parse(localStorage.getItem(this.#getItemString(userid, index)));
+			if (item.text.indexOf(str) > -1) ret.push({ itemid: index, item: item });
 		});
 		return ret;
 	}
