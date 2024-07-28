@@ -41,6 +41,10 @@ class User {
 class TodoItem {
 	/**@type {string} */ text;
 	/**@type {boolean} */ marked;
+	constructor(text) {
+		this.text = text;
+		this.marked = false;
+	}
 }
 /*
  * User DB - localstorage: dbUsers-(username)
