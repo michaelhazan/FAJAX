@@ -63,7 +63,7 @@ class ItemsDatabase {
 		return ret;
 	}
 	/**
-	 * Used to find every {@link TodoItem} which the whatToDo property contains a string.
+	 * Used to find every {@link TodoItem} where the text property contains specified string.
 	 * @param {User.userid} userid
 	 * @param {string} str
 	 * @returns
@@ -167,12 +167,29 @@ class UsersDatabase {
 		localStorage.setItem(this.#getUserString(user.username), user);
 		this.addedUsernames(user.username);
 	}
-	put(username, user) {}
+	put(userid, user) {
+		let userString = this.#getUserStringbyID(userid);
+		if (!userString) return false;
+		localStorage.setItem(userString, user);
+	}
 	delete(userid) {
-		// delete User by userid
+		let userString = this.#getUserStringbyID(userid);
+		if (!userString) return false;
+		let user = this.#getUser(userString);
+		this.addedUsernames.splice(user.username);
+		localStorage.removeItem(userString);
 	}
 	#getUserString(username) {
 		return `dbUsers-${username}`;
+	}
+	#getUserStringbyID(userid) {
+		this.addedUsernames.forEach((username) => {
+			let userString = `dbUsers-${username}`;
+			if (this.#getUser(userString).userid == userid) return userString;
+		});
+	}
+	#getUser(userString) {
+		return JSON.parse(localStorage.getItem(userString));
 	}
 }
 class Server {
