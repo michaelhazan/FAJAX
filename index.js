@@ -37,8 +37,8 @@ class User {
 }
 
 class TodoItem {
-	/**@type {string} */ whatToDo;
-	/**@type {boolean} */ finished;
+	/**@type {string} */ text;
+	/**@type {boolean} */ marked;
 }
 /*
  * User DB - localstorage: dbUsers-(username)
@@ -46,15 +46,11 @@ class TodoItem {
  * Toodoo DB Index - localstorage: dbData-(userid)-Index
  */
 class ItemsDatabase {
-	itemsAdded;
-	constructor() {
-		this.itemsAdded = 0;
-	}
 	/**
-	 *
+	 * Get {@link TodoItem} list from userid, specify itemid for a single item
 	 * @param {User.userid} userid
 	 * @param {Number} itemid
-	 * @returns {Array.<TodoItem>}
+	 * @returns {TodoItem[]}
 	 */
 	get(userid, itemid = null) {
 		let indexes = this.#getIndexes(userid);
@@ -66,22 +62,37 @@ class ItemsDatabase {
 		});
 		return ret;
 	}
+	/**
+	 * Used to find every {@link TodoItem} which the whatToDo property contains a string.
+	 * @param {User.userid} userid
+	 * @param {string} str
+	 * @returns
+	 */
 	find(userid, str) {
 		let items = this.get(userid);
 		let ret = [];
 		items.forEach((item) => {
-			if (item.whatToDo.indexOf(str) != -1) ret.push(item);
+			if (item.text.indexOf(str) != -1) ret.push(item);
 		});
 		return ret;
 	}
 	post(userid, item) {
 		let indexes = this.#getIndexes(userid);
+		let index = indexes.length;
+		this.#addToIndexes(userid, index);
+		this.#setItem(userid, index, item);
+		return true;
 	}
-	put(userid, itemid) {
-		// edit item by itemid
+	put(userid, itemid, item) {
+		this.#setItem(userid, itemid, item);
 	}
 	delete(userid, itemid) {
-		// delete item and index by itemid and userid
+		let indexes = this.#getIndexes(userid);
+		let indexToRemove = indexes.indexOf(itemid);
+		if (indexToRemove == -1) return false;
+		indexes.splice(indexToRemove, 1);
+		localStorage.setItem(this.#getIndexString(userid), indexes);
+		localStorage.removeItem(this.#getItemString(userid, itemid));
 	}
 	/**
 	 *
@@ -89,9 +100,19 @@ class ItemsDatabase {
 	 * @returns {Array.<Number>}
 	 */
 	#getIndexes(userid) {
-		let /** @type {Array.<Number>} */ indexes = JSON.parse(localStorage.getItem(`dbData-${userid}-Index`));
+		let /** @type {Array.<Number>} */ indexes = JSON.parse(localStorage.getItem(this.#getIndexString(userid)));
 		if (!indexes) return [];
 		return indexes;
+	}
+	#addToIndexes(userid, index) {
+		let str = this.#getIndexString(userid);
+		let /** @type {Array.<Number>} */ indexes = JSON.parse(localStorage.getItem(str));
+		if (!indexes) indexes = [];
+		indexes.push(index);
+		localStorage.setItem(str, indexes);
+	}
+	#getIndexString(userid) {
+		return `dbData-${userid}-Index`;
 	}
 	/**
 	 *
@@ -100,32 +121,58 @@ class ItemsDatabase {
 	 * @returns {TodoItem}
 	 */
 	#getItem(userid, itemid) {
-		return JSON.parse(localStorage.getItem(`dbData-${userid}-${itemid}`));
+		return JSON.parse(localStorage.getItem(this.#getItemString(userid, itemid)));
+	}
+	/**
+	 *
+	 * @param {User.userid} userid
+	 * @param {Number} itemid
+	 * @param {TodoItem} item
+	 */
+	#setItem(userid, itemid, item) {
+		localStorage.setItem(this.#getItemString(userid, itemid), item);
+	}
+	#getItemString(userid, itemid) {
+		return `dbData-${userid}-${itemid}`;
 	}
 }
 class UsersDatabase {
-	usersAdded;
+	addedUsernames;
 	constructor() {
-		this.usersAdded = 0;
+		this.addedUsernames = [];
 	}
 	/**
-	 * get info by userID
+	 * Get User by username
 	 * @param {User.userid} userid
 	 */
-	get(userid) {
-		// get user by userid
+	get(username) {
+		if (username) return JSON.parse(localStorage.getItem(this.#getUserString(username)));
+		return false;
 	}
-	find(username) {
-		// returns User by username
+	/**
+	 * Find User by userid.
+	 * @param {User.userid} userid
+	 */
+	find(userid) {
+		this.addedUsernames.forEach((user) => {
+			if (user.id == userid) return user;
+		});
 	}
+	/**
+	 *
+	 * @param {User} user
+	 */
 	post(user) {
-		// create User with user object
+		if (this.addedUsernames.includes(this.#getUserString(user.username))) return false;
+		localStorage.setItem(this.#getUserString(user.username), user);
+		this.addedUsernames(user.username);
 	}
-	put(userid) {
-		// edit User by userid
-	}
+	put(username, user) {}
 	delete(userid) {
 		// delete User by userid
+	}
+	#getUserString(username) {
+		return `dbUsers-${username}`;
 	}
 }
 class Server {
@@ -167,13 +214,13 @@ class Server {
 	 * @param {Message} message
 	 */
 	sendMessage(message) {
-		network.send(message);
+		this.network.send(message);
 	}
 }
 class ItemsServer extends Server {
 	#ItemsDB;
-	constructor() {
-		super();
+	constructor(network) {
+		super(network);
 		this.#ItemsDB = new ItemsDatabase();
 		this.functions = {
 			'GET': this.#get,
@@ -185,14 +232,15 @@ class ItemsServer extends Server {
 	#get() {
 		// check if user has valid userid
 	}
+
 	#put() {}
 	#post() {}
 	#delete() {}
 }
 class UsersServer extends Server {
 	#UsersDB;
-	constructor() {
-		super();
+	constructor(network) {
+		super(network);
 		this.#UsersDB = new UsersDatabase();
 		this.functions = {
 			'GET': this.#get,
@@ -202,7 +250,7 @@ class UsersServer extends Server {
 		};
 	}
 	#get(message) {
-		network.send(message);
+		this.network.send(message);
 	}
 	#put() {}
 	#post() {}
@@ -211,7 +259,7 @@ class UsersServer extends Server {
 class Network {
 	#servers;
 	constructor() {
-		this.#servers = { 'users': new UsersServer(), 'items': new ItemsServer() };
+		this.#servers = { 'users': new UsersServer(this), 'items': new ItemsServer(this) };
 	}
 	/**
 	 * Sends message to specified address
