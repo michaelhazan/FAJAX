@@ -15,15 +15,16 @@ class Message {
 	/**
 	 *
 	 * @param {RESTAPI} type
-	 * @param {} server
-	 * @param {*} sender
+	 * @param {string} server
+	 * @param {FXMLHttpRequest} client
+	 * @param {boolean} processed
 	 */
 	constructor(type, server, client, processed = false) {
 		this.type = type;
 		this.processed = processed;
 		this.server = server;
 		this.client = client;
-		this.body = '';
+		this.body = {};
 	}
 }
 /**
@@ -32,14 +33,14 @@ class Message {
 class User {
 	/**@type {string} */ username;
 	/**@type {string} */ password;
-	/**@type {number} */ userid;
+	/**@type {Number} */ userid;
 }
 
 class TodoItem {
 	/**@type {string} */ whatToDo;
 	/**@type {boolean} */ finished;
 }
-/**
+/*
  * User DB - localstorage: dbUsers-(username)
  * Toodoo DB - localstorage: dbData-(userid-itemid)
  * Toodoo DB Index - localstorage: dbData-(userid)-Index
@@ -49,29 +50,57 @@ class ItemsDatabase {
 	constructor() {
 		this.itemsAdded = 0;
 	}
+	/**
+	 *
+	 * @param {User.userid} userid
+	 * @param {Number} itemid
+	 * @returns {Array.<TodoItem>}
+	 */
 	get(userid, itemid = null) {
-		// if !index || index.length == 0 return empty
-		if (itemid != null) return this.#getItem(userid, itemid);
-		// return all by userid
-	}
-	#getItem(userid, itemid) {
-		// returns item by userid and itemid
+		let indexes = this.#getIndexes(userid);
+		if (indexes.length == 0) return [];
+		if (itemid != null) return [this.#getItem(userid, itemid)];
+		let ret = [];
+		indexes.forEach((index) => {
+			ret.push(this.#getItem(userid, index));
+		});
+		return ret;
 	}
 	find(userid, str) {
-		// returns itemid that contains str
+		let items = this.get(userid);
+		let ret = [];
+		items.forEach((item) => {
+			if (item.whatToDo.indexOf(str) != -1) ret.push(item);
+		});
+		return ret;
 	}
 	post(userid, item) {
-		// if !index create index
-		//adds item to db by userid, increments itemid as well
-		/**
-		with itemsadded 
-		*/
+		let indexes = this.#getIndexes(userid);
 	}
 	put(userid, itemid) {
 		// edit item by itemid
 	}
 	delete(userid, itemid) {
 		// delete item and index by itemid and userid
+	}
+	/**
+	 *
+	 * @param {User.userid} userid
+	 * @returns {Array.<Number>}
+	 */
+	#getIndexes(userid) {
+		let /** @type {Array.<Number>} */ indexes = JSON.parse(localStorage.getItem(`dbData-${userid}-Index`));
+		if (!indexes) return [];
+		return indexes;
+	}
+	/**
+	 *
+	 * @param {User.userid} userid
+	 * @param {Number} itemid
+	 * @returns {TodoItem}
+	 */
+	#getItem(userid, itemid) {
+		return JSON.parse(localStorage.getItem(`dbData-${userid}-${itemid}`));
 	}
 }
 class UsersDatabase {
@@ -102,9 +131,11 @@ class UsersDatabase {
 class Server {
 	messages;
 	functions;
-	constructor() {
-		this.messages = [];
+	network;
 
+	constructor(network) {
+		this.messages = [];
+		this.network = network;
 		setInterval(this.processMessages.bind(this), 3000);
 	}
 	addMessage(message) {
@@ -140,8 +171,10 @@ class Server {
 	}
 }
 class ItemsServer extends Server {
+	#ItemsDB;
 	constructor() {
 		super();
+		this.#ItemsDB = new ItemsDatabase();
 		this.functions = {
 			'GET': this.#get,
 			'PUT': this.#put,
@@ -149,15 +182,18 @@ class ItemsServer extends Server {
 			'DELETE': this.#delete,
 		};
 	}
-	#get() {}
+	#get() {
+		// check if user has valid userid
+	}
 	#put() {}
 	#post() {}
 	#delete() {}
 }
-const itemsServer = new ItemsServer();
 class UsersServer extends Server {
+	#UsersDB;
 	constructor() {
 		super();
+		this.#UsersDB = new UsersDatabase();
 		this.functions = {
 			'GET': this.#get,
 			'PUT': this.#put,
@@ -172,15 +208,10 @@ class UsersServer extends Server {
 	#post() {}
 	#delete() {}
 }
-const usersServer = new UsersServer();
-/**
- * @type {Object.<string,Server>}
- */
-const servers = { 'users': usersServer, 'items': itemsServer };
-
 class Network {
+	#servers;
 	constructor() {
-		this.ItemsServer = new ItemsServer();
+		this.#servers = { 'users': new UsersServer(), 'items': new ItemsServer() };
 	}
 	/**
 	 * Sends message to specified address
@@ -193,16 +224,18 @@ class Network {
 
 		setTimeout(() => {
 			if (message.processed) message.client.recieve(message); // send to client
-			else servers[message.server].addMessage(message);
+			else this.#servers[message.server].addMessage(message);
 		}, randWait);
 	}
 }
-const network = new Network();
-
 class FXMLHttpRequest {
 	/**@type {Function}*/ onload;
 	/**@type {string}*/ responseText;
 	/**@type {Message}*/ #message;
+	/**@type {Network}*/ #network;
+	constructor() {
+		this.#network = new Network();
+	}
 
 	open(type, address) {
 		this.#message = new Message(type, address, this);
@@ -213,7 +246,7 @@ class FXMLHttpRequest {
 	 */
 	send(body = null) {
 		this.#message.body = body;
-		network.send(this.#message);
+		this.#network.send(this.#message);
 	}
 
 	recieve(response) {
@@ -222,10 +255,4 @@ class FXMLHttpRequest {
 	}
 }
 
-var fxml = new FXMLHttpRequest();
-fxml.open('GET', 'users');
-fxml.onload = (res) => {
-	console.log(res);
-	console.log('finished');
-};
-fxml.send();
+//
