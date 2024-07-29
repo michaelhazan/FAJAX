@@ -199,6 +199,7 @@ function toggleRenameMode() {
     toggleDeleteMode();
   }
   document.querySelector(".rename-button").classList.toggle("clicked");
+  document.querySelectorAll('li').forEach((li) => li.classList.toggle('rename-mode'))
 }
 
 /**
@@ -211,6 +212,7 @@ function toggleDeleteMode() {
     toggleRenameMode();
   }
   document.querySelector(".delete-button").classList.toggle("clicked");
+  document.querySelectorAll('li').forEach((li) => li.classList.toggle('delete-mode'))
 }
 
 /**

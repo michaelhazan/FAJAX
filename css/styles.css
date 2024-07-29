@@ -37,6 +37,7 @@ legend {
 li {
 	list-style-type: square;
 	margin: 10px;
+	transition: all 200ms;
 }
 
 footer {
@@ -80,6 +81,14 @@ footer {
 	background-color: black;
 	color: white;
 	border: 1px solid white;
+}
+
+.delete-mode {
+	color: rgb(255, 100, 100);
+}
+
+.rename-mode {
+	color: rgb(200, 200, 210);
 }
 
 #item-list {
