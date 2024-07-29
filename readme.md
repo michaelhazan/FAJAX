@@ -1,8 +1,8 @@
-# FAJAX
+# <div align="center">FAJAX</div>
 
-# Fake Asynchronous JavaScript and XML
+# <div align="center">Fake Asynchronous JavaScript and XML</div>
 
-## Works completely client side and doesn't actually connect to the server. <br>Connect to your fake internet and change your fake database with your fake server!
+## <div align="center">Works completely client side and doesn't actually connect to the server. <br><br>Connect to your fake internet and change your fake database with your fake server!</div>
 
 ---
 
@@ -43,15 +43,46 @@
 	fxml.send();
 ```
 ## [Network (the internet connection)](./js/network.js)
+
+### The Network has a fake packet drop functionality, the send functions returns <span style="font-weight:900; color: #FF5733">false</span> if failed <span style="font-weight:900; color:#7CB9E8">true</span> if succeeded. 
+
 ```js
+	const network = new Network();
+
+	const userFXML = new FXMLHttpRequest();
+
+	let success = network.send(new Message('GET', 'users', userFXML));
+
+	if(success) console.log('Message sent!');
+	else console.log('wompwomp message failed ;(');
 ```
+
 ## [Servers](./js/server.js)
+
 ```js
+
+	class exampleServer extends Server {
+		/*
+			There are 2 servers, 
+			you can look at the way that they work with the link above
+		*/
+	}
+
 ```
+
 ## [Databases](./js/database.js)
+
 ```js
+
+	/*
+		There are 2 databases, 
+		you can look at the way that they work with the link above
+	*/
+
 ```
+
 ## [Objects](./js/objects.js)
+
 ```js
 
 	let todoItem = new TodoItem('figure out a purpose for life.');
@@ -60,6 +91,7 @@
 	if(purposefound) todoItem.checked = true;
 
 ```
+
 ```js
 
 	let user = new User(
@@ -75,6 +107,7 @@
 	if(password === user.password) return 'cuh pretending';
 
 ```
+
 ```js
 
 	let userFXML = new FXMLHttpRequest();
@@ -91,16 +124,4 @@
 
 ```
 
-
-
-
-
-
-
-
-
-
-
-
 Authors: [MikeyPants](https://github.com/MikeyPantsOn), [Jonathan-Arga](https://github.com/Jonathan-Arga)
-`<meta name="google-site-verification" content="7AkVG1NFWWTrzE627xq9C4rLuqRpSn8D6uDwWD1DBeo" />`

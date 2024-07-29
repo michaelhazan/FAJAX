@@ -24,3 +24,4 @@ class Network {
 		return true;
 	}
 }
+const MainNetwork = new Network();

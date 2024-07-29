@@ -4,7 +4,7 @@ class FXMLHttpRequest {
 	/**@type {Message}*/ #message;
 	/**@type {Network}*/ #network;
 	constructor() {
-		this.#network = new Network();
+		this.#network = MainNetwork;
 	}
 	/**
 	 *
