@@ -45,8 +45,6 @@ function updateList() {
 			itemElement.setAttribute('data-id', element.itemid);
 			itemElement.addEventListener('click', changeItem);
 			list.appendChild(itemElement);
-			console.log('itemElement:', itemElement)
-			
 		}
 	};
 	alertError(fxml.send({ type: 'list', userid: userid }));
@@ -131,21 +129,16 @@ function deleteMarked() {
 	const fxml = new FXMLHttpRequest();
 	fxml.open('GET', 'items');
 	fxml.onload = function () {
-		const markedArray = JSON.parse(fxml.responseText.body).filter((item) => item.marked === true);
+		const markedArray = JSON.parse(fxml.responseText.body).filter((elem) => elem.item.marked === true);
 		
-		for (const item of markedArray) {
-			itemFXML = new FXMLHttpRequest();
-			itemFXML.open('GET', 'items');
-			itemFXML.onload = function () {
-				let itemid = JSON.parse(this.responseText.body)[0].itemid;
-				deleteFXML = new FXMLHttpRequest()
-				deleteFXML.open('DELETE', 'items');
-				deleteFXML.onload = function() {
-					updateList();
-				}
-				alertError(deleteFXML.send({userid, itemid}))
+		for (const elem of markedArray) {
+			let itemid = elem.itemid
+			deleteFXML = new FXMLHttpRequest()
+			deleteFXML.open('DELETE', 'items');
+			deleteFXML.onload = function() {
+				updateList();
 			}
-			alertError(itemFXML.send({type: 'search', userid, search:item.text}))
+			alertError(deleteFXML.send({userid, itemid}))
 		}
 	};
 	alertError(fxml.send({ type: 'list', userid: userid }));
