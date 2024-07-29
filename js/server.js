@@ -25,13 +25,14 @@ class Server {
 	 */
 	processMessage(message) {
 		var messageType = message.type.toUpperCase();
+		this.messages.splice(this.messages.indexOf(message), 1);
+
 		if (this.functions[messageType]) {
 			// flip the values, resquester is now responder and otherwise
 			message.requester = [message.responder, (message.responder = message.requester)][0];
 
 			this.functions[messageType](message);
 		} else throw `Not a valid REST API code: ${messageType}`;
-		this.messages.splice(this.messages.indexOf(message), 1);
 	}
 	/**
 	 * Sends message to network
