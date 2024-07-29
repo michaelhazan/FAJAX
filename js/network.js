@@ -16,7 +16,9 @@ class Network {
 	send(message) {
 		let randWait = Math.floor(Math.random() * 2);
 		let randDrop = Math.random();
-		if (randDrop < 0.02) return false;
+		if (randDrop < 0.02) {
+			return false;
+		}
 
 		setTimeout(() => {
 			if (typeof message.responder != 'string') message.responder.recieve(message); // send to client

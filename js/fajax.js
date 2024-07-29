@@ -21,7 +21,6 @@ class FXMLHttpRequest {
 	send(body = null) {
 		if (body) this.#message.body = JSON.stringify(body);
 		else this.#message.body = JSON.stringify({});
-		console.log(this.#message);
 		return this.#network.send(this.#message);
 	}
 

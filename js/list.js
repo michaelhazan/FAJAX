@@ -26,8 +26,7 @@ function updateList() {
     navigate("login");
     return;
   }
-
-  const fxml = new FXMLHttpRequest();
+  let fxml = new FXMLHttpRequest();
   fxml.open("GET", "items");
   fxml.onload = function () {
     let item;
@@ -52,7 +51,7 @@ function updateList() {
       list.appendChild(itemElement);
     }
   };
-  alertError(fxml.send({ type: "list", userid: userid }));
+  while(!fxml.send({ type: "list", userid: userid }));
 }
 
 /**
