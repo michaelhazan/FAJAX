@@ -1,0 +1,8 @@
+name: Actions
+on: [push]
+jobs:
+    Actions:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Markdown Embed Code From File
+              uses: tokusumi/markdown-embed-code@v1.0.0
