@@ -44,7 +44,7 @@ function updateList() {
 			list.appendChild(itemElement);
 		}
 	};
-	fxml.send({ type: 'list', userid: userid });
+	alertError(fxml.send({ type: 'list', userid: userid }));
 }
 
 function addItem() {
@@ -60,7 +60,7 @@ function addItem() {
 	fxml.onload = function () {
 		updateList();
 	};
-	fxml.send({ userid: userid, item: item });
+	alertError(fxml.send({ userid: userid, item: item }));
 }
 
 function changeItem(e) {
@@ -88,9 +88,9 @@ function markItem(e) {
 		fxml.onload = function() {
 			updateList();
 		}
-		fxml.send({type: 'toggle-checked', userid, itemid});
+		alertError(fxml.send({type: 'toggle-checked', userid, itemid}));
 	}
-	fxmlGet.send({type: 'search', userid, search:text});
+	alertError(fxmlGet.send({type: 'search', userid, search:text}));
 
 
 }
@@ -113,9 +113,9 @@ function renameItem(e) {
 			updateList();
 			toggleRenameMode();
 		}
-		fxml.send({type: 'edit', userid, itemid, 'item': newItem});
+		alertError(fxml.send({type: 'edit', userid, itemid, 'item': newItem}));
 	}
-	fxmlGet.send({type: 'search', userid, search:text});
+	alertError(fxmlGet.send({type: 'search', userid, search:text}));
 }
 
 function deleteItem(e) {
@@ -134,9 +134,9 @@ function deleteItem(e) {
 			updateList();
 			toggleDeleteMode();
 		}
-		fxml.send({userid, itemid});
+		alertError(fxml.send({userid, itemid}));
 	}
-	fxmlGet.send({type: 'search', userid, search:text});
+	alertError(fxmlGet.send({type: 'search', userid, search:text}));
 }
 
 function deleteMarked() {
@@ -158,12 +158,12 @@ function deleteMarked() {
 				deleteFXML.onload = function() {
 					updateList();
 				}
-				deleteFXML.send({userid, itemid})
+				alertError(deleteFXML.send({userid, itemid}))
 			}
-			itemFXML.send({type: 'search', userid, search:item.text})
+			alertError(itemFXML.send({type: 'search', userid, search:item.text}))
 		}
 	};
-	fxml.send({ type: 'list', userid: userid });
+	alertError(fxml.send({ type: 'list', userid: userid }));
 }
 
 function toggleRenameMode() {
@@ -180,4 +180,10 @@ function toggleDeleteMode() {
 		toggleRenameMode();
 	}
 	document.querySelector('.delete-button').classList.toggle('clicked');
+}
+
+function alertError (bool) {
+	if (!bool) {
+		alert('Something happened when attempting to reach the server. please try again')
+	}
 }

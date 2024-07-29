@@ -46,7 +46,7 @@ function validateLogin() {
 			alert('Had problem logging in, try again.');
 		}
 	};
-	fxml.send({ type: 'login', username, password});
+	alertError(fxml.send({ type: 'login', username, password}));
 }
 
 /**
@@ -80,7 +80,7 @@ function validateSignup() {
 			alert('Had problem signing up, try again.');
 		}
 	};
-	fxml.send(user);
+	alertError(fxml.send(user));
 }
 
 /**
