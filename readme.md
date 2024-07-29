@@ -51,7 +51,7 @@
 
 ## [Network (the internet connection)](./js/network.js)
 
-### The Network has a fake packet drop functionality, the send functions returns <x style="font-weight:900; color: #FF5733">false</x> if failed <x style="font-weight:900; color:#7CB9E8">true</x> if succeeded. 
+### The Network has a fake packet drop functionality, the send functions returns ${\color{red}false}$ if failed ${\color{greenyellow}true}$ if succeeded. 
 
 ```js
 	const network = new Network();
