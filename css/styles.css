@@ -75,6 +75,13 @@ footer {
 	text-decoration: underline;
 }
 
+.edit-item-input {
+	margin-left: 0;
+	background-color: black;
+	color: white;
+	border: 1px solid white;
+}
+
 #item-list {
 	max-height: 35em;
 	overflow: auto;
