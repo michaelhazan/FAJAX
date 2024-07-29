@@ -91,6 +91,7 @@
 	*/
 
 ```
+<h1 align="center">The Format</h1>
 
 ## [Objects](./js/objects.js)
 
@@ -102,8 +103,6 @@
 	if(purposefound) todoItem.checked = true;
 
 ```
-
-<h1 align="center">The Format</h1>
 
 
 ```js
