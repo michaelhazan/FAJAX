@@ -28,12 +28,20 @@
 
 <br>
 
-# <center>The Base:</center>
+# <div align="center">The Base:</div>
 
 ## FXMLHttpRequest
 
-### This class basically works exactly the same
+### This class basically works exactly the same as XMLHttpRequest, without many of its features.
 
 ```js
-
+	let fxml = new FXMLHttpRequest();
+	// can be users / items at its base line, edit servers and databases as u want.
+	fxml.open('GET', 'users');
+	fxml.onload = () => {
+		console.log(fxml.responseText);
+		console.log('OMG LOOK AT THAT RESPONSE!');
+	};
+	// can contain the body of the message
+	fxml.send();
 ```
