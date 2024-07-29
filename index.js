@@ -209,7 +209,7 @@ class Server {
 
 	constructor() {
 		this.messages = [];
-		setInterval(this.processMessages.bind(this), 3000);
+		setInterval(this.processMessages.bind(this), 500);
 	}
 	addMessage(message) {
 		this.messages.push(message);
