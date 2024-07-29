@@ -6,17 +6,17 @@
 
 ---
 
-# <center>FAQ</center>
+# <div align="center">FAQ</div>
 
-## Why?:
+## Why?
 
 ### No reason, we were asked to build it so we did.
 
-## What can it be used for?:
+## What can it be used for?
 
-### Nothing really, you can look into the code to "learn" how communication between server and client works, but lets be real, just learn nodejs.
+### Nothing really, you can look into the code to "learn" how communication between server and client works...<br> but lets be real...<br> just learn nodejs.
 
-## How does it work?:
+## How does it work?
 
 ### Really? ok.
 
@@ -28,9 +28,9 @@
 
 <br>
 
-# <div align="center">The Base:</div>
+# <div align="center">The Base</div>
 
-## FXMLHttpRequest
+## [FXMLHttpRequest](./js/fajax.js)
 
 ### This class basically works exactly the same as XMLHttpRequest, without many of its features.
 
@@ -45,3 +45,5 @@
 	// can contain the body of the message
 	fxml.send();
 ```
+
+#
