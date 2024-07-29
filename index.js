@@ -306,8 +306,9 @@ class ItemsServer extends Server {
 				message.body = this.#ItemsDB.get(body.userid, body.itemid);
 				break;
 			case 'search':
-				if (!body.text) throw `Missing search!`;
-				message.body = this.#ItemsDB.find(body.userid, body.text);
+				if (!body.search) throw `Missing search!`;
+				if ((typeof body, search != 'string')) throw `Search isn't a string!`;
+				message.body = this.#ItemsDB.find(body.userid, body.search);
 				break;
 			default:
 				throw 'No or Invalid type specified!';
