@@ -64,7 +64,7 @@ class ItemsDatabase {
 		if (itemid != null) return [this.#getItem(userid, itemid)];
 		let ret = [];
 		indexes.forEach((index) => {
-			ret.push(this.#getItem(userid, index));
+			ret.push({ itemid: index, item: this.#getItem(userid, index) });
 		});
 		return ret;
 	}
@@ -247,7 +247,10 @@ class Server {
 	 */
 	sendMessage(message) {
 		message.body = JSON.stringify(message.body);
-		this.network.send(message);
+		let messageSent = false;
+		while (!messageSent) {
+			messageSent = this.network.send(message);
+		}
 	}
 }
 /**
