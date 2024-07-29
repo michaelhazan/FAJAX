@@ -79,15 +79,18 @@ class ItemsDatabase {
 		let ret = [];
 		indexes.forEach((index) => {
 			let /**@type {TodoItem} */ item = JSON.parse(localStorage.getItem(this.#getItemString(userid, index)));
-			if (item.text.indexOf(str) > -1) {ret.push({ itemid: index, item: item });
-			console.log(item)}
+			if (item.text.indexOf(str) > -1) {
+				ret.push({ itemid: index, item: item });
+				console.log(item);
+			}
 		});
-		console.log(ret)
+		console.log(ret);
 		return ret;
 	}
 	post(userid, item) {
 		let indexes = this.#getIndexes(userid);
-		let index = indexes[indexes.length - 1] + 1;
+		let index = 0;
+		if (indexes.length > 0) index = indexes[indexes.length - 1] + 1;
 		this.#addToIndexes(userid, index);
 		this.#setItem(userid, index, item);
 		return true;
