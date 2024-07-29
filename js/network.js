@@ -6,9 +6,6 @@ class Network {
 			'items': new ItemsServer(this),
 		};
 	}
-	test(message) {
-		this.#servers['users'].sendMessage(new Message('POST', message.requester, message.responder));
-	}
 	/**
 	 * Sends message to specified address
 	 * @param {Message} message
