@@ -1,24 +1,38 @@
 # FAJAX
 
-## Fake Asynchronous JavaScript and XML
+# Fake Asynchronous JavaScript and XML
 
-### Works completely client side and doesn't actually connect to the server. <br>Connect to your fake internet and change your fake database with your fake server
+## Works completely client side and doesn't actually connect to the server. <br>Connect to your fake internet and change your fake database with your fake server
 
-### Why?:
+---
 
-#### No reason, we were asked to build it so we did.
+# <center>FAQ</center>
 
-### What can it be used for?:
+## Why?:
 
-#### Nothing really, you can look into the code to "learn" how communication between server and client works, but lets be real, just learn nodejs.
+### No reason, we were asked to build it so we did.
 
-### How does it work?:
+## What can it be used for?:
 
-#### Really? ok.
+### Nothing really, you can look into the code to "learn" how communication between server and client works, but lets be real, just learn nodejs.
+
+## How does it work?:
+
+### Really? ok.
+
+<br>
 
 > [!WARNING]
-> This repository was made on whim and will most likely never be updated, any issues / pullrequests will not be.
+> This repository was made on whim and will most likely never be updated, any issues will not be looked at.
 > <br>Also this code is wanky af, be warned.
+
+<br>
+
+# <center>The Base:</center>
+
+## FXMLHttpRequest
+
+### This class basically works exactly the same
 
 ```js
 
