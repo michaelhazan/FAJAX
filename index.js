@@ -303,7 +303,7 @@ class ItemsServer extends Server {
 				message.body = this.#ItemsDB.get(body.userid);
 				break;
 			case 'item':
-				if (!body.itemid) throw `Missing itemid!`;
+				if (body.itemid === null) throw `Missing itemid!`;
 				message.body = this.#ItemsDB.get(body.userid, body.itemid);
 				break;
 			case 'search':
@@ -459,12 +459,12 @@ class Network {
 		let randWait = Math.floor(Math.random() * 2);
 		let randDrop = Math.random();
 		if (randDrop < 0.02) return false;
-		console.log(message.responder);
 
 		setTimeout(() => {
 			if (typeof message.responder != 'string') message.responder.recieve(message); // send to client
 			else this.#servers[message.responder].addMessage(message);
 		}, randWait);
+		return true;
 	}
 }
 class FXMLHttpRequest {
@@ -491,7 +491,7 @@ class FXMLHttpRequest {
 		if (body) this.#message.body = JSON.stringify(body);
 		else this.#message.body = JSON.stringify({});
 		console.log(this.#message);
-		this.#network.send(this.#message);
+		return this.#network.send(this.#message);
 	}
 
 	recieve(response) {
