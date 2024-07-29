@@ -106,7 +106,7 @@ function renameItem(e) {
 	fxmlGet.open('GET', 'items');
 	fxmlGet.onload = function() {
 		let itemid = this.responseText.body;
-		let newItem = new TodoItem(newtext)
+		let newItem = new TodoItem(newText)
 		const fxml = new FXMLHttpRequest()
 		fxml.open('PUT', 'items');
 		fxml.onload = function() {
