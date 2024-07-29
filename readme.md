@@ -2,7 +2,7 @@
 
 # Fake Asynchronous JavaScript and XML
 
-## Works completely client side and doesn't actually connect to the server. <br>Connect to your fake internet and change your fake database with your fake server
+## Works completely client side and doesn't actually connect to the server. <br>Connect to your fake internet and change your fake database with your fake server!
 
 ---
 
@@ -28,7 +28,7 @@
 
 <br>
 
-# <div align="center">The Base</div>
+<h1 align="center">The Base</h1>
 
 ## [FXMLHttpRequest](./js/fajax.js)
 
@@ -46,4 +46,6 @@
 	fxml.send();
 ```
 
-#
+
+
+Authors: [MikeyPants](https://github.com/MikeyPantsOn), [Jonathan-Arga](https://github.com/Jonathan-Arga)
