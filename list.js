@@ -44,7 +44,7 @@ function updateList() {
 			list.appendChild(itemElement);
 		}
 	};
-	fxml.send({ type: 'list', userid: userid });
+	alertError(fxml.send({ type: 'list', userid: userid }));
 }
 
 function addItem() {
@@ -60,7 +60,7 @@ function addItem() {
 	fxml.onload = function () {
 		updateList();
 	};
-	fxml.send({ userid: userid, item: item });
+	alertError(fxml.send({ userid: userid, item: item }));
 }
 
 function changeItem(e) {
@@ -82,15 +82,17 @@ function markItem(e) {
 	const fxmlGet = new FXMLHttpRequest()
 	fxmlGet.open('GET', 'items');
 	fxmlGet.onload = function() {
-		let itemid = JSON.parse(this.responseText.body)[0].itemid;
+		const idArray = JSON.parse(this.responseText.body);
+		let idIndex = idArray.findIndex((elem) => elem.item.text === text)
+		let itemid = idArray[idIndex].itemid;
 		const fxml = new FXMLHttpRequest()
 		fxml.open('PUT', 'items');
 		fxml.onload = function() {
 			updateList();
 		}
-		fxml.send({type: 'toggle-checked', userid, itemid});
+		alertError(fxml.send({type: 'toggle-checked', userid, itemid}));
 	}
-	fxmlGet.send({type: 'search', userid, search:text});
+	alertError(fxmlGet.send({type: 'search', userid, search:text}));
 
 
 }
@@ -105,7 +107,9 @@ function renameItem(e) {
 	const fxmlGet = new FXMLHttpRequest()
 	fxmlGet.open('GET', 'items');
 	fxmlGet.onload = function() {
-		let itemid = JSON.parse(this.responseText.body)[0].itemid;
+		const idArray = JSON.parse(this.responseText.body);
+		let idIndex = idArray.findIndex((elem) => elem.item.text === text)
+		let itemid = idArray[idIndex].itemid;
 		let newItem = new TodoItem(newText)
 		const fxml = new FXMLHttpRequest()
 		fxml.open('PUT', 'items');
@@ -113,9 +117,9 @@ function renameItem(e) {
 			updateList();
 			toggleRenameMode();
 		}
-		fxml.send({type: 'edit', userid, itemid, 'item': newItem});
+		alertError(fxml.send({type: 'edit', userid, itemid, 'item': newItem}));
 	}
-	fxmlGet.send({type: 'search', userid, search:text});
+	alertError(fxmlGet.send({type: 'search', userid, search:text}));
 }
 
 function deleteItem(e) {
@@ -127,30 +131,45 @@ function deleteItem(e) {
 	const fxmlGet = new FXMLHttpRequest()
 	fxmlGet.open('GET', 'items');
 	fxmlGet.onload = function() {
-		let itemid = JSON.parse(this.responseText.body)[0].itemid;
+		const idArray = JSON.parse(this.responseText.body);
+		let idIndex = idArray.findIndex((elem) => elem.item.text === text)
+		let itemid = idArray[idIndex].itemid;
 		const fxml = new FXMLHttpRequest()
 		fxml.open('DELETE', 'items');
 		fxml.onload = function() {
 			updateList();
 			toggleDeleteMode();
 		}
-		fxml.send({userid, itemid});
+		alertError(fxml.send({userid, itemid}));
 	}
-	fxmlGet.send({type: 'search', userid, search:text});
+	alertError(fxmlGet.send({type: 'search', userid, search:text}));
 }
 
 function deleteMarked() {
-	let i = 0,
-		j = 0;
-
-	while (i < itemArray.length) {
-		const item = itemArray[i];
-		if (!item.marked) itemArray[j++] = item;
-		i++;
-	}
-
-	itemArray.length = j;
-	updateList();
+	let userid = sessionStorage.getItem('current');
+	let itemFXML, deleteFXML;
+	
+	const fxml = new FXMLHttpRequest();
+	fxml.open('GET', 'items');
+	fxml.onload = function () {
+		const markedArray = JSON.parse(fxml.responseText.body).filter((item) => item.marked === true);
+		
+		for (const item of markedArray) {
+			itemFXML = new FXMLHttpRequest();
+			itemFXML.open('GET', 'items');
+			itemFXML.onload = function () {
+				let itemid = JSON.parse(this.responseText.body)[0].itemid;
+				deleteFXML = new FXMLHttpRequest()
+				deleteFXML.open('DELETE', 'items');
+				deleteFXML.onload = function() {
+					updateList();
+				}
+				alertError(deleteFXML.send({userid, itemid}))
+			}
+			alertError(itemFXML.send({type: 'search', userid, search:item.text}))
+		}
+	};
+	alertError(fxml.send({ type: 'list', userid: userid }));
 }
 
 function toggleRenameMode() {
@@ -167,4 +186,10 @@ function toggleDeleteMode() {
 		toggleRenameMode();
 	}
 	document.querySelector('.delete-button').classList.toggle('clicked');
+}
+
+function alertError (bool) {
+	if (!bool) {
+		alert('Something happened when attempting to reach the server. please try again')
+	}
 }
