@@ -190,7 +190,7 @@ class UsersDatabase {
 		let userString = this.#getUserStringbyID(userid);
 		if (!userString) return false;
 		let user = this.#getUser(userString);
-		this.#addedUsernames.splice(user.username);
+		this.#addedUsernames.splice(user.username, 1);
 		localStorage.removeItem(userString);
 	}
 	#getUserString(username) {
@@ -239,7 +239,7 @@ class Server {
 
 			this.functions[messageType](message);
 		} else throw `Not a valid REST API code: ${messageType}`;
-		this.messages.splice(this.messages.indexOf(message));
+		this.messages.splice(this.messages.indexOf(message), 1);
 	}
 	/**
 	 * Sends message to network
@@ -359,9 +359,10 @@ class ItemsServer extends Server {
 	 * @param {Message} message
 	 */
 	#delete(message) {
+		console.log('DELETE');
 		let body = JSON.parse(message.body);
 		if (!body.userid || body.itemid === null) throw `Missing userid or itemid!`;
-		this.#ItemsDB.delete(body.userid, body.itemid);
+		console.log(this.#ItemsDB.delete(Number.parseInt(body.userid), Number.parseInt(body.itemid)));
 		message.body = true;
 		this.sendMessage(message);
 	}
