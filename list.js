@@ -140,17 +140,30 @@ function deleteItem(e) {
 }
 
 function deleteMarked() {
-	let i = 0,
-		j = 0;
-
-	while (i < itemArray.length) {
-		const item = itemArray[i];
-		if (!item.marked) itemArray[j++] = item;
-		i++;
-	}
-
-	itemArray.length = j;
-	updateList();
+	let userid = sessionStorage.getItem('current');
+	let itemFXML, deleteFXML;
+	
+	const fxml = new FXMLHttpRequest();
+	fxml.open('GET', 'items');
+	fxml.onload = function () {
+		const markedArray = JSON.parse(fxml.responseText.body).filter((item) => item.marked === true);
+		
+		for (const item of markedArray) {
+			itemFXML = new FXMLHttpRequest();
+			itemFXML.open('GET', 'items');
+			itemFXML.onload = function () {
+				let itemid = JSON.parse(this.responseText.body)[0].itemid;
+				deleteFXML = new FXMLHttpRequest()
+				deleteFXML.open('DELETE', 'items');
+				deleteFXML.onload = function() {
+					updateList();
+				}
+				deleteFXML.send({userid, itemid})
+			}
+			itemFXML.send({type: 'search', userid, search:item.text})
+		}
+	};
+	fxml.send({ type: 'list', userid: userid });
 }
 
 function toggleRenameMode() {
