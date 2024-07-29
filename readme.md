@@ -28,7 +28,7 @@
 
 <br>
 
-<h1 align="center">The Base</h1>
+<div align="center">The Base</div>
 
 ## [FXMLHttpRequest](./js/fajax.js)
 
@@ -45,6 +45,23 @@
 	// can contain the body of the message
 	fxml.send();
 ```
+## [Network (the internet connection)](./js/network.js)
+
+## [Servers](./js/server.js)
+## [Databases](./js/database.js)
+## [Objects](./js/objects.js)
+```js:js/object.js
+
+```
+
+
+
+
+
+
+
+
+
 
 
 
