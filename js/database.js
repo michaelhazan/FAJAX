@@ -49,9 +49,9 @@ class ItemsDatabase {
 		this.#setItem(userid, itemid, item);
 	}
 	delete(userid, itemid) {
-		let indexes = this.#getIndexes(userid);
-		let indexToRemove = indexes.indexOf(itemid);
-		if (indexToRemove == -1) return false;
+		let /**@type {Array} */ indexes = this.#getIndexes(userid);
+		let indexToRemove = indexes.indexOf(Number.parseInt(itemid));
+		if (indexToRemove == -1) throw `Item Index was not found!`;
 		indexes.splice(indexToRemove, 1);
 		localStorage.setItem(this.#getIndexString(userid), JSON.stringify(indexes));
 		localStorage.removeItem(this.#getItemString(userid, itemid));
