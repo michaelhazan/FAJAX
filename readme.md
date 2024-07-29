@@ -25,10 +25,7 @@
 > [!WARNING]
 > This repository was made on whim and will most likely never be updated, any issues will not be looked at.
 > <br>Also this code is wanky af, be warned.
-
-<br>
-
-<div align="center">The Base</div>
+<h1 align="center">The Base</h1>
 
 ## [FXMLHttpRequest](./js/fajax.js)
 
@@ -46,11 +43,51 @@
 	fxml.send();
 ```
 ## [Network (the internet connection)](./js/network.js)
-
+```js
+```
 ## [Servers](./js/server.js)
+```js
+```
 ## [Databases](./js/database.js)
+```js
+```
 ## [Objects](./js/objects.js)
-```js:js/object.js
+```js
+
+	let todoItem = new TodoItem('figure out a purpose for life.');
+
+	let purposefound = confirm('is there a purpose?');
+	if(purposefound) todoItem.checked = true;
+
+```
+```js
+
+	let user = new User(
+		'my-amazing-name',
+		'my-super-secure-password', 
+		'my-special-id'
+	);
+	
+	let username = confirm('whats ur name cuh?');
+	if(username !== user.username) return 'cuh aint him';
+
+	let password = confirm('whats the pass cuh?');
+	if(password === user.password) return 'cuh pretending';
+
+```
+```js
+
+	let userFXML = new FXMLHttpRequest();
+
+	let message = new Message('GET','users',userFXML);
+
+	let network = new Network();
+
+	message.body = {
+		text: "my amazin message"
+	}
+
+	network.send(message);
 
 ```
 
