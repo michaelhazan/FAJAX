@@ -85,7 +85,7 @@ class ItemsDatabase {
 	}
 	post(userid, item) {
 		let indexes = this.#getIndexes(userid);
-		let index = indexes.length;
+		let index = indexes[indexes.length - 1] + 1;
 		this.#addToIndexes(userid, index);
 		this.#setItem(userid, index, item);
 		return true;
@@ -113,7 +113,6 @@ class ItemsDatabase {
 	}
 	#addToIndexes(userid, index) {
 		let str = this.#getIndexString(userid);
-		console.log('userid - ' + str);
 		let /** @type {Array.<Number>} */ indexes = JSON.parse(localStorage.getItem(str));
 		if (!indexes) indexes = [];
 		indexes.push(index);
