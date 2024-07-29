@@ -82,7 +82,9 @@ function markItem(e) {
 	const fxmlGet = new FXMLHttpRequest()
 	fxmlGet.open('GET', 'items');
 	fxmlGet.onload = function() {
-		let itemid = JSON.parse(this.responseText.body)[0].itemid;
+		const idArray = JSON.parse(this.responseText.body);
+		let idIndex = idArray.findIndex((elem) => elem.item.text === text)
+		let itemid = idArray[idIndex].itemid;
 		const fxml = new FXMLHttpRequest()
 		fxml.open('PUT', 'items');
 		fxml.onload = function() {
@@ -105,7 +107,9 @@ function renameItem(e) {
 	const fxmlGet = new FXMLHttpRequest()
 	fxmlGet.open('GET', 'items');
 	fxmlGet.onload = function() {
-		let itemid = JSON.parse(this.responseText.body)[0].itemid;
+		const idArray = JSON.parse(this.responseText.body);
+		let idIndex = idArray.findIndex((elem) => elem.item.text === text)
+		let itemid = idArray[idIndex].itemid;
 		let newItem = new TodoItem(newText)
 		const fxml = new FXMLHttpRequest()
 		fxml.open('PUT', 'items');
@@ -127,7 +131,9 @@ function deleteItem(e) {
 	const fxmlGet = new FXMLHttpRequest()
 	fxmlGet.open('GET', 'items');
 	fxmlGet.onload = function() {
-		let itemid = JSON.parse(this.responseText.body)[0].itemid;
+		const idArray = JSON.parse(this.responseText.body);
+		let idIndex = idArray.findIndex((elem) => elem.item.text === text)
+		let itemid = idArray[idIndex].itemid;
 		const fxml = new FXMLHttpRequest()
 		fxml.open('DELETE', 'items');
 		fxml.onload = function() {
