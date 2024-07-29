@@ -253,7 +253,7 @@ class Server {
  *
  * 	{type:'item', userid:(userid), itemid:(itemid)} - Get item by userid and itemid.
  *
- * 	{type:'search', userid:(userid), search:(string)} - Get item by userid and itemid.
+ * 	{type:'search', userid:(userid), search:(string)} - Get all items with text containing string.
  *
  * \ end of get /
  *
