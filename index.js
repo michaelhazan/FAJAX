@@ -307,7 +307,7 @@ class ItemsServer extends Server {
 				break;
 			case 'search':
 				if (!body.search) throw `Missing search!`;
-				if ((typeof body, search != 'string')) throw `Search isn't a string!`;
+				if (typeof body.search != 'string') throw `Search isn't a string!`;
 				message.body = this.#ItemsDB.find(body.userid, body.search);
 				break;
 			default:
