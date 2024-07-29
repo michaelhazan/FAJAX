@@ -152,10 +152,8 @@ class ItemsServer extends Server {
 	 * @param {Message} message
 	 */
 	#delete(message) {
-		console.log('DELETE');
 		let body = JSON.parse(message.body);
 		if (!body.userid || body.itemid === null) throw `Missing userid or itemid!`;
-		console.log(this.#ItemsDB.delete(Number.parseInt(body.userid), Number.parseInt(body.itemid)));
 		message.body = true;
 		this.sendMessage(message);
 	}
@@ -216,7 +214,6 @@ class UsersServer extends Server {
 	 */
 	#post(message) {
 		let body = JSON.parse(message.body);
-		console.log(body);
 		if (!body['username'] || !body['password']) throw `Missing username / password!`;
 		if (this.#UsersDB.get(body.username)) throw `Username already exists!`;
 		let userid = this.#generateUserID();
@@ -236,9 +233,7 @@ class UsersServer extends Server {
 		let userid = `${amountOfUsers}`;
 		for (let i = 0; i < this.#userIDLength - amountOfUsers.toString().length; i++) {
 			let rand = Number.parseInt(Math.random() * (9 - 1) + 1);
-			console.log(`rand ${rand}`);
 			userid += `${rand}`;
-			console.log(userid);
 		}
 		return Number.parseInt(userid);
 	}

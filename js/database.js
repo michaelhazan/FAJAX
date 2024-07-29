@@ -33,10 +33,8 @@ class ItemsDatabase {
 			let /**@type {TodoItem} */ item = JSON.parse(localStorage.getItem(this.#getItemString(userid, index)));
 			if (item.text.indexOf(str) > -1) {
 				ret.push({ itemid: index, item: item });
-				console.log(item);
 			}
 		});
-		console.log(ret);
 		return ret;
 	}
 	post(userid, item) {
@@ -129,7 +127,6 @@ class UsersDatabase {
 	 */
 	post(user) {
 		if (this.#addedUsernames.includes(this.#getUserString(user.username))) return false;
-		console.log(JSON.stringify(user));
 		localStorage.setItem(this.#getUserString(user.username), JSON.stringify(user));
 		this.#addedUsernames.push(user.username);
 	}
