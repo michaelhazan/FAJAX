@@ -82,7 +82,7 @@ function markItem(e) {
 	const fxmlGet = new FXMLHttpRequest()
 	fxmlGet.open('GET', 'items');
 	fxmlGet.onload = function() {
-		let itemid = this.responseText.body;
+		let itemid = JSON.parse(this.responseText.body)[0].itemid;
 		const fxml = new FXMLHttpRequest()
 		fxml.open('PUT', 'items');
 		fxml.onload = function() {
