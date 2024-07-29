@@ -1,0 +1,27 @@
+.login,
+.signup {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+}
+
+.login .signup-nav {
+	padding: 1em;
+}
+
+.login a,
+.signup a,
+.list a {
+	text-decoration: none;
+	color: aquamarine;
+}
+.login a:hover,
+.signup a:hover,
+.list a:hover {
+	cursor: pointer;
+}
+.login input,
+.signup input {
+	float: right;
+}

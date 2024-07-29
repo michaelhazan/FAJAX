@@ -16,24 +16,6 @@ main {
 	width: 90%;
 }
 
-.edit-buttons {
-	display: flex;
-	justify-content: space-around;
-}
-
-.edit-buttons button {
-	width: 20% !important;
-	padding: 10px 20px;
-	min-width: 110px;
-	gap: 24px;
-}
-
-.logout-button {
-	width: 25% !important;
-	align-self: center;
-	padding: 10px 20px;
-}
-
 fieldset {
 	display: flex;
 	flex-direction: column;
@@ -52,14 +34,38 @@ legend {
 	font-weight: bold;
 }
 
-.clicked {
-	background-color: rgb(73, 73, 73);
-	color: white;
-}
-
 li {
 	list-style-type: square;
 	margin: 10px;
+}
+
+footer {
+	position: absolute;
+	color: rgb(100, 100, 100);
+	bottom: 0;
+}
+
+.edit-buttons {
+	display: flex;
+	justify-content: space-around;
+}
+
+.edit-buttons button {
+	width: 20% !important;
+	padding: 10px 20px;
+	min-width: 110px;
+	gap: 24px;
+}
+
+.logout-button {
+	width: 25% !important;
+	align-self: center;
+	padding: 10px 20px;
+}
+
+.clicked {
+	background-color: rgb(73, 73, 73);
+	color: white;
 }
 
 .marked {
@@ -74,32 +80,9 @@ li {
 	text-decoration: underline;
 }
 
-footer {
-	position: absolute;
-	color: rgb(100, 100, 100);
-	bottom: 0;
-}
-
-.login,
-.signup {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	text-align: center;
-}
-
-.login a,
-.signup a,
-.list a {
-	text-decoration: none;
-	color: aquamarine;
-}
-.login a:hover,
-.signup a:hover,
-.list a:hover {
-	cursor: pointer;
-}
-.login input,
-.signup input {
-	float: right;
+#item-list {
+	max-height: 25em;
+	overflow: scroll;
+	scrollbar-width: 0.5px;
+	scrollbar-color: cyan;
 }

@@ -4,8 +4,10 @@
 	width: 65%;
 	position: relative;
 	margin: auto;
-	background-color: black;
+	background-color: #515151;
 	border-radius: 4em;
+	border: none;
+	outline: none;
 	font-size: 16px;
 	color: white;
 	cursor: pointer;
@@ -19,7 +21,7 @@
 .signup button:hover,
 .list button:hover {
 	transition: all 0.75s ease-in-out;
-	background-color: #1f1f1f;
+	background-color: #6b6b6b;
 }
 
 .login button:after,
@@ -35,7 +37,7 @@
 	height: 100%;
 	opacity: 0;
 	transition: all 0.5s;
-	box-shadow: 0 0 5px 15px white;
+	box-shadow: 0 0 2px 5px white;
 }
 
 .login button:active:after,

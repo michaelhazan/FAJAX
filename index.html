@@ -4,7 +4,9 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>List!</title>
-		<link rel="stylesheet" href="./styles.css" />
+		<link rel="stylesheet" href="./css/styles.css" />
+		<link rel="stylesheet" href="./css/buttons.css" />
+		<link rel="stylesheet" href="./css/pages.css" />
 	</head>
 	<body>
 		<header>
@@ -28,9 +30,10 @@
 						>Password: <input type="password" id="login-password" name="login-password" required minlength="8" maxlength="32"
 					/></label>
 					<button>LOG IN</button>
+					<p class="validation-text"></p>
 				</fieldset>
 			</form>
-			<div>Don't have an account? <br /><a class="nav-link" onclick="navigate('signup')">Click here to sign up!</a></div>
+			<div class="signup-nav">Don't have an account? <br /><a class="nav-link" onclick="navigate('signup')">Click here to sign up!</a></div>
 		</template>
 
 		<template id="signup-template">
