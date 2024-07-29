@@ -354,7 +354,7 @@ class ItemsServer extends Server {
 	 */
 	#delete(message) {
 		let body = JSON.parse(message.body);
-		if (!body.userid || !body.itemid) throw `Missing userid or itemid!`;
+		if (!body.userid || body.itemid === null) throw `Missing userid or itemid!`;
 		this.#ItemsDB.delete(body.userid, body.itemid);
 	}
 }
