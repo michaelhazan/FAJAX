@@ -25,23 +25,28 @@ function updateList() {
 	const fxml = new FXMLHttpRequest();
 	fxml.open('GET', 'items');
 	fxml.onload = function () {
+		let item;
 		const itemArray = JSON.parse(fxml.responseText.body);
 		itemArray.sort((a, b) => {
-			if (!a.marked && b.marked) return -1;
-			if (a.marked && !b.marked) return 1;
-			return a.text < b.text ? -1 : 1;
+			if (!a.item.marked && b.item.marked) return -1;
+			if (a.item.marked && !b.item.marked) return 1;
+			return a.item.text < b.item.text ? -1 : 1;
 		});
 
 		list.innerHTML = '';
-		for (const item of itemArray) {
+		for (const element of itemArray) {
+			item = element.item;
 			itemElement = document.createElement('li');
 			itemElement.classList.add('list-item');
 			itemElement.textContent = item.text;
 			if (item.marked) {
 				itemElement.classList.add('marked');
 			}
+			itemElement.setAttribute('data-id', element.itemid);
 			itemElement.addEventListener('click', changeItem);
 			list.appendChild(itemElement);
+			console.log('itemElement:', itemElement)
+			
 		}
 	};
 	alertError(fxml.send({ type: 'list', userid: userid }));
@@ -76,41 +81,25 @@ function changeItem(e) {
 }
 
 function markItem(e) {
-	let text = e.target.textContent;
 	let userid = sessionStorage.getItem('current');
-	
-	const fxmlGet = new FXMLHttpRequest()
-	fxmlGet.open('GET', 'items');
-	fxmlGet.onload = function() {
-		const idArray = JSON.parse(this.responseText.body);
-		let idIndex = idArray.findIndex((elem) => elem.item.text === text)
-		let itemid = idArray[idIndex].itemid;
-		const fxml = new FXMLHttpRequest()
+	let itemid = e.target.getAttribute('data-id');
+
+	const fxml = new FXMLHttpRequest()
 		fxml.open('PUT', 'items');
 		fxml.onload = function() {
 			updateList();
 		}
 		alertError(fxml.send({type: 'toggle-checked', userid, itemid}));
-	}
-	alertError(fxmlGet.send({type: 'search', userid, search:text}));
-
-
 }
 
 function renameItem(e) {
-	let text = e.target.textContent;
 	let newText = prompt('What do you want to rename this element?');
 	if (!newText) return;
 
 	let userid = sessionStorage.getItem('current');
+	let itemid = e.target.getAttribute('data-id');
 
-	const fxmlGet = new FXMLHttpRequest()
-	fxmlGet.open('GET', 'items');
-	fxmlGet.onload = function() {
-		const idArray = JSON.parse(this.responseText.body);
-		let idIndex = idArray.findIndex((elem) => elem.item.text === text)
-		let itemid = idArray[idIndex].itemid;
-		let newItem = new TodoItem(newText)
+	let newItem = new TodoItem(newText)
 		const fxml = new FXMLHttpRequest()
 		fxml.open('PUT', 'items');
 		fxml.onload = function() {
@@ -118,31 +107,21 @@ function renameItem(e) {
 			toggleRenameMode();
 		}
 		alertError(fxml.send({type: 'edit', userid, itemid, 'item': newItem}));
-	}
-	alertError(fxmlGet.send({type: 'search', userid, search:text}));
 }
 
 function deleteItem(e) {
 	if (!confirm('Are you sure you want to delete this item?')) return;
 
-	let text = e.target.textContent;
 	let userid = sessionStorage.getItem('current');
+	let itemid = e.target.getAttribute('data-id');
 
-	const fxmlGet = new FXMLHttpRequest()
-	fxmlGet.open('GET', 'items');
-	fxmlGet.onload = function() {
-		const idArray = JSON.parse(this.responseText.body);
-		let idIndex = idArray.findIndex((elem) => elem.item.text === text)
-		let itemid = idArray[idIndex].itemid;
-		const fxml = new FXMLHttpRequest()
+	const fxml = new FXMLHttpRequest()
 		fxml.open('DELETE', 'items');
 		fxml.onload = function() {
 			updateList();
 			toggleDeleteMode();
 		}
 		alertError(fxml.send({userid, itemid}));
-	}
-	alertError(fxmlGet.send({type: 'search', userid, search:text}));
 }
 
 function deleteMarked() {
