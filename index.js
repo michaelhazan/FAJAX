@@ -226,7 +226,6 @@ class Server {
 				console.error(err);
 			}
 		});
-		this.messages = [];
 	}
 	/**
 	 *
@@ -240,6 +239,7 @@ class Server {
 
 			this.functions[messageType](message);
 		} else throw `Not a valid REST API code: ${messageType}`;
+		this.messages.splice(this.messages.indexOf(message));
 	}
 	/**
 	 * Sends message to network
