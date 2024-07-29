@@ -1,4 +1,9 @@
 .login button,
+.signup button {
+	padding: 6px 0px;
+}
+
+.login button,
 .signup button,
 .list button {
 	width: 65%;
