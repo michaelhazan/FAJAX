@@ -16,4 +16,10 @@
 
 #### Really? ok.
 
-####
+> [!WARNING]
+> This repository was made on whim and will most likely never be updated, any issues / pullrequests will not be.
+> <br>Also this code is wanky af, be warned.
+
+```js
+
+```
