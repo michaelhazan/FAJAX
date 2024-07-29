@@ -90,7 +90,7 @@ function markItem(e) {
 		}
 		fxml.send({type: 'toggle-checked', userid, itemid});
 	}
-	fxmlGet.send({type: 'search', userid, text});
+	fxmlGet.send({type: 'search', userid, search:text});
 
 
 }
@@ -115,7 +115,7 @@ function renameItem(e) {
 		}
 		fxml.send({type: 'edit', userid, itemid, 'item': newItem});
 	}
-	fxmlGet.send({type: 'search', userid, text});
+	fxmlGet.send({type: 'search', userid, search:text});
 }
 
 function deleteItem(e) {
@@ -136,7 +136,7 @@ function deleteItem(e) {
 		}
 		fxml.send({userid, itemid});
 	}
-	fxmlGet.send({type: 'search', userid, text});
+	fxmlGet.send({type: 'search', userid, search:text});
 }
 
 function deleteMarked() {
