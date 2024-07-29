@@ -321,7 +321,7 @@ class ItemsServer extends Server {
 	 */
 	#put(message) {
 		let body = JSON.parse(message.body);
-		if (!body.userid || !body.itemid) throw `Missing userid or itemid!`;
+		if (!body.userid || body.itemid === null) throw `Missing userid or itemid!`;
 		switch (body.type) {
 			case 'edit':
 				if (!body.item) throw `Missing Item!`;
