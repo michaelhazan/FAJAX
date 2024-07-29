@@ -1,19 +1,19 @@
 // SPA
 
-document.addEventListener('DOMContentLoaded', init);
-const page = document.querySelector('.main-page');
+document.addEventListener("DOMContentLoaded", init);
+const page = document.querySelector(".main-page");
 let loginTemp, signupTemp, listTemp;
 
 /**
  * initialize main page
  */
 function init() {
-	loginTemp = document.querySelector('#login-template');
-	signupTemp = document.querySelector('#signup-template');
-	gameTemp = document.querySelector('#list-template');
-	page.appendChild(loginTemp.content.cloneNode(true));
-	page.classList = ['login'];
-	document.removeEventListener('DOMContentLoaded', init);
+  loginTemp = document.querySelector("#login-template");
+  signupTemp = document.querySelector("#signup-template");
+  gameTemp = document.querySelector("#list-template");
+  page.appendChild(loginTemp.content.cloneNode(true));
+  page.classList = ["login"];
+  document.removeEventListener("DOMContentLoaded", init);
 }
 
 /**
@@ -21,10 +21,10 @@ function init() {
  * @param {string} pageName
  */
 function navigate(pageName) {
-	let templateToLoad = document.querySelector('#' + pageName + '-template');
+  let templateToLoad = document.querySelector("#" + pageName + "-template");
 
-	page.replaceChildren(templateToLoad.content.cloneNode(true));
-	page.classList = [pageName];
+  page.replaceChildren(templateToLoad.content.cloneNode(true));
+  page.classList = [pageName];
 }
 
 // form validation
@@ -33,54 +33,54 @@ function navigate(pageName) {
  * Validate a log in attempt
  */
 function validateLogin() {
-	let username = this['login-username'].value;
-	let password = this['login-password'].value;
+  let username = this["login-username"].value;
+  let password = this["login-password"].value;
 
-	const fxml = new FXMLHttpRequest();
-	fxml.open('GET', 'users');
-	fxml.onload = function () {
-		let userid = JSON.parse(fxml.responseText.body).userid;
-		if (userid) {
-			entrySuccess(userid, username);
-		} else {
-			alert('Had problem logging in, try again.');
-		}
-	};
-	alertError(fxml.send({ type: 'login', username, password}));
+  const fxml = new FXMLHttpRequest();
+  fxml.open("GET", "users");
+  fxml.onload = function () {
+    let userid = JSON.parse(fxml.responseText.body).userid;
+    if (userid) {
+      entrySuccess(userid, username);
+    } else {
+      alert("Had problem logging in, try again.");
+    }
+  };
+  alertError(fxml.send({ type: "login", username, password }));
 }
 
 /**
  * validates a sign up attempt
  */
 function validateSignup() {
-	let username = this['signup-username'].value;
-	let password = this['signup-password'].value;
-	let pwVerification = this['pw-verification'].value;
-	let errText = document.querySelector('.validation-text');
-	errText.textContent = '';
+  let username = this["signup-username"].value;
+  let password = this["signup-password"].value;
+  let pwVerification = this["pw-verification"].value;
+  let errText = document.querySelector(".validation-text");
+  errText.textContent = "";
 
-	if (password !== pwVerification) {
-		errText.textContent = 'Passwords do not match';
-		this['signup-password'].value = '';
-		this['pw-verification'].value = '';
-		return;
-	}
+  if (password !== pwVerification) {
+    errText.textContent = "Passwords do not match";
+    this["signup-password"].value = "";
+    this["pw-verification"].value = "";
+    return;
+  }
 
-	// passed validation
+  // passed validation
 
-	const user = { 'username': username, 'password': password };
+  const user = { username: username, password: password };
 
-	const fxml = new FXMLHttpRequest();
-	fxml.open('POST', 'users');
-	fxml.onload = function () {
-		let userid = JSON.parse(fxml.responseText.body).userid;
-		if (userid) {
-			entrySuccess(userid, username);
-		} else {
-			alert('Had problem signing up, try again.');
-		}
-	};
-	alertError(fxml.send(user));
+  const fxml = new FXMLHttpRequest();
+  fxml.open("POST", "users");
+  fxml.onload = function () {
+    let userid = JSON.parse(fxml.responseText.body).userid;
+    if (userid) {
+      entrySuccess(userid, username);
+    } else {
+      alert("Had problem signing up, try again.");
+    }
+  };
+  alertError(fxml.send(user));
 }
 
 /**
@@ -91,15 +91,15 @@ function validateSignup() {
  * @param {string} username
  */
 function entrySuccess(userid, username) {
-	navigate('list');
-	sessionStorage.setItem('current', userid);
-	initializeList(username);
+  navigate("list");
+  sessionStorage.setItem("current", userid);
+  initializeList(username);
 }
 
 /**
  * logs out the current user and returns them to login screen
  */
 function logout() {
-	sessionStorage.removeItem('current');
-	navigate('login');
+  sessionStorage.removeItem("current");
+  navigate("login");
 }
