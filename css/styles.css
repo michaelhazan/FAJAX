@@ -87,8 +87,16 @@ footer {
 	color: rgb(255, 100, 100);
 }
 
+.delete-mode::marker {
+	content: '-  ';
+}
+
 .rename-mode {
 	color: rgb(200, 200, 210);
+}
+
+.rename-mode::marker {
+	content: '+  ';
 }
 
 #item-list {
