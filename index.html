@@ -71,6 +71,14 @@
 			<button class="logout-button" onclick="logout()">LOG OUT</button>
 		</template>
 
+		<template id="edit-item-template">
+			<li class="edit-list-item">
+				<form onsubmit="return false">
+					<input class="edit-item-input" type="text" name="text">
+				</form>
+			</li>
+		</template>
+
 		<template id="item-template">
 			<li class="item"></li>
 		</template>
