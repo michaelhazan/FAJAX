@@ -1,6 +1,3 @@
-// testing ONLY
-// const itemArray = [{text: 'exercise', marked: false}, {text: 'sleep', marked: true}, {text: 'work', marked: false}, {text: 'eat lunch', marked: false}];
-
 let renameMode = false,
   deleteMode = false;
 
