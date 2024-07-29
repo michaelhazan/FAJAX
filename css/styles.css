@@ -81,3 +81,9 @@ footer {
 	scrollbar-width: 0.5px;
 	scrollbar-color: cyan;
 }
+#item-list::-webkit-scrollbar-thumb {
+	background-color: cyan;
+}
+#item-list::-webkit-scrollbar-corner {
+	background-color: transparent;
+}
