@@ -82,7 +82,7 @@ footer {
 
 #item-list {
 	max-height: 35em;
-	overflow: scroll;
+	overflow: auto;
 	scrollbar-width: 0.5px;
 	scrollbar-color: cyan;
 }
