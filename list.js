@@ -105,7 +105,7 @@ function renameItem(e) {
 	const fxmlGet = new FXMLHttpRequest()
 	fxmlGet.open('GET', 'items');
 	fxmlGet.onload = function() {
-		let itemid = this.responseText.body;
+		let itemid = JSON.parse(this.responseText.body)[0].itemid;
 		let newItem = new TodoItem(newText)
 		const fxml = new FXMLHttpRequest()
 		fxml.open('PUT', 'items');
@@ -113,7 +113,7 @@ function renameItem(e) {
 			updateList();
 			toggleRenameMode();
 		}
-		fxml.send({type: 'edit', userid, itemid, newItem});
+		fxml.send({type: 'edit', userid, itemid, 'item': newItem});
 	}
 	fxmlGet.send({type: 'search', userid, text});
 }
@@ -127,7 +127,7 @@ function deleteItem(e) {
 	const fxmlGet = new FXMLHttpRequest()
 	fxmlGet.open('GET', 'items');
 	fxmlGet.onload = function() {
-		let itemid = this.responseText.body;
+		let itemid = JSON.parse(this.responseText.body)[0].itemid;
 		const fxml = new FXMLHttpRequest()
 		fxml.open('DELETE', 'items');
 		fxml.onload = function() {
