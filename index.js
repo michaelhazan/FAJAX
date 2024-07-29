@@ -324,7 +324,7 @@ class ItemsServer extends Server {
 		switch (body.type) {
 			case 'edit':
 				if (!body.item) throw `Missing Item!`;
-				if (typeof body.item != TodoItem) throw `Incorrect item type! (not a TodoItem).`;
+				if (!body.item.text || body.item.marked === null) throw `Incorrect item type! (not a TodoItem).`;
 				message.body = this.#ItemsDB.put(body.userid, body.itemid, body.item);
 				break;
 			case 'toggle-checked':
