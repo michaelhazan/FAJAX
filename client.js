@@ -8,7 +8,6 @@ let loginTemp, signupTemp, listTemp;
  * initialize main page
  */
 function init() {
-	sessionStorage.removeItem('current');
 	loginTemp = document.querySelector('#login-template');
 	signupTemp = document.querySelector('#signup-template');
 	gameTemp = document.querySelector('#list-template');
