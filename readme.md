@@ -4,6 +4,7 @@
 
 ## <div align="center">Works completely client side and doesn't actually connect to the server. <br><br>Connect to your fake internet and change your fake database with your fake server!</div>
 
+## [<div align="center">Check out this example.</div>](https://michaelh-hilma.github.io/FAJAX/)
 ---
 
 # <div align="center">FAQ</div>
