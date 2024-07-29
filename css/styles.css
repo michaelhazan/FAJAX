@@ -63,11 +63,6 @@ footer {
 	padding: 10px 20px;
 }
 
-.clicked {
-	background-color: rgb(73, 73, 73);
-	color: white;
-}
-
 .marked {
 	text-decoration: line-through;
 	color: rgb(100, 100, 100);

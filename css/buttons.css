@@ -57,3 +57,8 @@
 .list button:active {
 	top: 1px;
 }
+
+.clicked {
+	background-color: lightgray !important;
+	color: black !important;
+}
