@@ -330,7 +330,7 @@ class ItemsServer extends Server {
 				break;
 			case 'toggle-checked':
 				let item = this.#ItemsDB.get(body.userid, body.itemid)[0];
-				item.marked = true;
+				item.marked = !item.marked;
 				this.#ItemsDB.put(body.userid, body.itemid, item);
 		}
 
