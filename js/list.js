@@ -51,7 +51,7 @@ function updateList() {
       list.appendChild(itemElement);
     }
   };
-  while(!fxml.send({ type: "list", userid: userid }));
+  while (!fxml.send({ type: "list", userid: userid }));
 }
 
 /**
@@ -117,21 +117,24 @@ function renameItem(e) {
   const listElement = document.querySelector(`li[data-id="${itemid}"]`);
   let itemText = listElement.textContent;
   const listParent = listElement.parentElement;
-  listParent.replaceChild(document.getElementById('edit-item-template').content.cloneNode(true), listElement)
-  const editElement = document.querySelector('.edit-list-item')
+  listParent.replaceChild(
+    document.getElementById("edit-item-template").content.cloneNode(true),
+    listElement
+  );
+  const editElement = document.querySelector(".edit-list-item");
 
-  const inputElement = document.querySelector('.edit-item-input');
-  inputElement.setAttribute('value', itemText)
+  const inputElement = document.querySelector(".edit-item-input");
+  inputElement.setAttribute("value", itemText);
   inputElement.select();
-  inputElement.addEventListener('focusout', () => {
+  inputElement.addEventListener("focusout", () => {
     listParent.replaceChild(listElement, editElement);
     toggleRenameMode();
-  })
-  inputElement.parentElement.addEventListener('submit', () => {
-    let item = new TodoItem(inputElement.parentElement['text'].value)
+  });
+  inputElement.parentElement.addEventListener("submit", () => {
+    let item = new TodoItem(inputElement.parentElement["text"].value);
     sendRenameRequest(item, userid, itemid);
     return false;
-  })
+  });
 }
 
 function sendRenameRequest(item, userid, itemid) {
@@ -199,7 +202,9 @@ function toggleRenameMode() {
     toggleDeleteMode();
   }
   document.querySelector(".rename-button").classList.toggle("clicked");
-  document.querySelectorAll('li').forEach((li) => li.classList.toggle('rename-mode'))
+  document
+    .querySelectorAll("li")
+    .forEach((li) => li.classList.toggle("rename-mode"));
 }
 
 /**
@@ -212,7 +217,9 @@ function toggleDeleteMode() {
     toggleRenameMode();
   }
   document.querySelector(".delete-button").classList.toggle("clicked");
-  document.querySelectorAll('li').forEach((li) => li.classList.toggle('delete-mode'))
+  document
+    .querySelectorAll("li")
+    .forEach((li) => li.classList.toggle("delete-mode"));
 }
 
 /**
